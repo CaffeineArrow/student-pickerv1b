@@ -1,0 +1,8 @@
+{
+  "name": "Remix Classroom Random Name Picker",
+  "description": "A modern Material Design 3 classroom random name picker featuring dynamic HTML5 Canvas wheel and slot machine modes, physics animations, and custom rosters.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

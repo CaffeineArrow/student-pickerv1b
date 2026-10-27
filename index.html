@@ -1,0 +1,4400 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Picker</title>
+    <meta name="description" content="A modern Material Design 3 student picker featuring Wheel, Slot Machine, Crate Shoot, Claw Machine, and Team Picker modes." />
+    <meta property="og:title" content="Student Picker" />
+    <meta property="og:description" content="A modern Material Design 3 student picker featuring Wheel, Slot Machine, Crate Shoot, Claw Machine, and Team Picker modes." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Google Fonts: Google Sans Flex, JetBrains Mono, Material Symbols Outlined -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@300..800&family=JetBrains+Mono:wght@700;800&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+    <style>
+      /* --- Material Design 3 Green Theme (Compact, Border-Driven, Zero AI Shadows) --- */
+      :root {
+        --md-sys-color-primary: #006d3a;
+        --md-sys-color-on-primary: #ffffff;
+        --md-sys-color-primary-container: #b8f5be;
+        --md-sys-color-on-primary-container: #00210e;
+
+        --md-sys-color-secondary: #516350;
+        --md-sys-color-on-secondary: #ffffff;
+        --md-sys-color-secondary-container: #d4e8d1;
+        --md-sys-color-on-secondary-container: #0f1f11;
+
+        --md-sys-color-background: #f6f9f6;
+        --md-sys-color-on-background: #161e19;
+        --md-sys-color-surface: #ffffff;
+        --md-sys-color-on-surface: #161e19;
+        --md-sys-color-surface-variant: #e5ece3;
+        --md-sys-color-on-surface-variant: #414941;
+
+        --md-sys-color-surface-container-lowest: #ffffff;
+        --md-sys-color-surface-container-low: #f1f6ef;
+        --md-sys-color-surface-container: #e9efe8;
+        --md-sys-color-surface-container-high: #e2e8e1;
+        --md-sys-color-surface-container-highest: #dbe2da;
+
+        --md-sys-color-outline: #717971;
+        --md-sys-color-outline-variant: #c4cdc2;
+        --md-sys-color-inverse-surface: #2b322c;
+        --md-sys-color-inverse-on-surface: #ecf3eb;
+
+        --md-shape-corner-full: 9999px;
+        --md-shape-corner-extra-large: 20px;
+        --md-shape-corner-large: 14px;
+        --md-shape-corner-medium: 10px;
+        --md-shape-corner-small: 6px;
+
+        --md-motion-easing-emphasized: cubic-bezier(0.2, 0, 0, 1);
+        --md-motion-easing-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      [data-theme="dark"] {
+        --md-sys-color-primary: #88fca0;
+        --md-sys-color-on-primary: #00391c;
+        --md-sys-color-primary-container: #00522a;
+        --md-sys-color-on-primary-container: #b8f5be;
+
+        --md-sys-color-secondary: #b8ccb6;
+        --md-sys-color-on-secondary: #243424;
+        --md-sys-color-secondary-container: #3a4b3a;
+        --md-sys-color-on-secondary-container: #d4e8d1;
+
+        --md-sys-color-background: #0e1410;
+        --md-sys-color-on-background: #e0e4df;
+        --md-sys-color-surface: #141c17;
+        --md-sys-color-on-surface: #e0e4df;
+        --md-sys-color-surface-variant: #39423b;
+        --md-sys-color-on-surface-variant: #c1c9bf;
+
+        --md-sys-color-surface-container-lowest: #0a0f0c;
+        --md-sys-color-surface-container-low: #18201b;
+        --md-sys-color-surface-container: #1d2621;
+        --md-sys-color-surface-container-high: #242e28;
+        --md-sys-color-surface-container-highest: #2b3630;
+
+        --md-sys-color-outline: #8b938a;
+        --md-sys-color-outline-variant: #343d35;
+        --md-sys-color-inverse-surface: #e0e4df;
+        --md-sys-color-inverse-on-surface: #2b322c;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      body {
+        font-family: 'Google Sans Flex', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background-color: var(--md-sys-color-background);
+        color: var(--md-sys-color-on-background);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        transition: background-color 0.2s ease, color 0.2s ease;
+        overflow-x: hidden;
+      }
+
+      /* --- Compact Top App Bar --- */
+      header.m3-top-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.55rem 1.25rem;
+        background-color: var(--md-sys-color-surface);
+        border-bottom: 1px solid var(--md-sys-color-outline-variant);
+        gap: 0.75rem;
+      }
+
+      .header-top-row {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+      }
+
+      .app-brand {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.1;
+      }
+
+      .app-title-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.15rem;
+      }
+
+      .app-title-row {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+      }
+
+      .app-title-row h1 {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 1.1rem;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        color: var(--md-sys-color-on-surface);
+      }
+
+      .m3-btn-edit-names {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.22rem 0.65rem;
+        border-radius: var(--md-shape-corner-full);
+        border: 1px solid var(--md-sys-color-outline-variant);
+        background: var(--md-sys-color-surface-container);
+        color: var(--md-sys-color-primary);
+        font-family: inherit;
+        font-size: 0.76rem;
+        font-weight: 700;
+        cursor: pointer;
+        outline: none;
+        white-space: nowrap;
+        user-select: none;
+        transition: background-color 0.15s ease, transform 0.1s ease, border-color 0.15s ease, color 0.15s ease;
+      }
+
+      .m3-btn-edit-names:hover {
+        background-color: var(--md-sys-color-primary-container);
+        color: var(--md-sys-color-on-primary-container);
+        border-color: var(--md-sys-color-primary);
+      }
+
+      .m3-btn-edit-names:active {
+        transform: scale(0.95);
+      }
+
+      .app-title-group .pool-badge {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--md-sys-color-secondary);
+      }
+
+      /* --- Full-Screen Loading Screen Overlay --- */
+      .app-loading-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        background-color: var(--md-sys-color-background);
+        color: var(--md-sys-color-on-background);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        transition: opacity 0.35s ease, visibility 0.35s ease;
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+      }
+
+      .app-loading-overlay.fade-out {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
+
+      .loading-center {
+        text-align: center;
+        padding: 1rem;
+      }
+
+      .loading-title {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: clamp(2.2rem, 5.5vw, 3.8rem);
+        font-weight: 800;
+        letter-spacing: -0.03em;
+        color: var(--md-sys-color-on-background);
+        margin: 0;
+        user-select: none;
+      }
+
+      .loading-bottom-right {
+        position: absolute;
+        bottom: 2rem;
+        right: 2.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        user-select: none;
+      }
+
+      .loading-text {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.92rem;
+        font-weight: 700;
+        color: var(--md-sys-color-secondary);
+        letter-spacing: -0.01em;
+      }
+
+      .loading-spinner {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        border: 2.5px solid var(--md-sys-color-outline-variant);
+        border-top-color: var(--md-sys-color-primary);
+        animation: spinCircle 0.75s linear infinite;
+      }
+
+      @keyframes spinCircle {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      @media (max-width: 680px) {
+        .loading-bottom-right {
+          bottom: 1.25rem;
+          right: 1.25rem;
+        }
+      }
+
+      /* Compact Mode Switcher (Wheel | Slot Reel | Crate Shoot | Grabber) */
+      .m3-segmented-control {
+        position: relative;
+        display: inline-flex;
+        background-color: var(--md-sys-color-surface-container);
+        border: 1px solid var(--md-sys-color-outline-variant);
+        border-radius: var(--md-shape-corner-full);
+        padding: 3px;
+        user-select: none;
+      }
+
+      .m3-segmented-indicator {
+        position: absolute;
+        top: 3px;
+        bottom: 3px;
+        left: 3px;
+        width: calc(20% - 2.5px);
+        background-color: var(--md-sys-color-surface);
+        border: 1px solid var(--md-sys-color-outline-variant);
+        border-radius: var(--md-shape-corner-full);
+        transition: transform 0.22s var(--md-motion-easing-emphasized);
+        pointer-events: none;
+      }
+
+      .m3-segmented-control[data-mode="wheel"] .m3-segmented-indicator { transform: translateX(0%); }
+      .m3-segmented-control[data-mode="slot"] .m3-segmented-indicator { transform: translateX(100%); }
+      .m3-segmented-control[data-mode="crate"] .m3-segmented-indicator { transform: translateX(200%); }
+      .m3-segmented-control[data-mode="claw"] .m3-segmented-indicator { transform: translateX(300%); }
+      .m3-segmented-control[data-mode="teams"] .m3-segmented-indicator { transform: translateX(400%); }
+
+      .m3-segment-btn {
+        position: relative;
+        z-index: 2;
+        border: none;
+        background: transparent;
+        font-family: inherit;
+        font-size: 0.76rem;
+        font-weight: 600;
+        color: var(--md-sys-color-on-surface-variant);
+        padding: 0.35rem 0.65rem;
+        border-radius: var(--md-shape-corner-full);
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        outline: none;
+        transition: color 0.15s ease;
+      }
+
+      .m3-segmented-control[data-mode="wheel"] .m3-segment-btn[data-value="wheel"],
+      .m3-segmented-control[data-mode="slot"] .m3-segment-btn[data-value="slot"],
+      .m3-segmented-control[data-mode="crate"] .m3-segment-btn[data-value="crate"],
+      .m3-segmented-control[data-mode="claw"] .m3-segment-btn[data-value="claw"],
+      .m3-segmented-control[data-mode="teams"] .m3-segment-btn[data-value="teams"] {
+        color: var(--md-sys-color-primary);
+      }
+
+      .app-actions {
+        display: flex;
+        align-items: center;
+      }
+
+      .m3-btn-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: var(--md-shape-corner-full);
+        border: 1px solid var(--md-sys-color-outline-variant);
+        background: var(--md-sys-color-surface-container);
+        color: var(--md-sys-color-on-surface);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        outline: none;
+        transition: background-color 0.15s ease, transform 0.1s ease;
+      }
+
+      .m3-btn-icon:hover {
+        background-color: var(--md-sys-color-primary-container);
+        color: var(--md-sys-color-on-primary-container);
+      }
+
+      .m3-btn-icon:active {
+        transform: scale(0.93);
+      }
+
+      /* --- Main Stage Area (Compact & Well-Fitted) --- */
+      main.app-main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 0.85rem 1rem;
+        max-width: 900px;
+        width: 100%;
+        margin: 0 auto;
+      }
+
+      .stage-card {
+        position: relative;
+        width: 100%;
+        max-width: 660px;
+        background-color: var(--md-sys-color-surface);
+        border-radius: var(--md-shape-corner-extra-large);
+        border: 1px solid var(--md-sys-color-outline-variant);
+        padding: 1.15rem 1.15rem 0.95rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 380px;
+        transition: all 0.3s ease;
+      }
+
+      /* Mode 1: Wheel View */
+      .wheel-view {
+        position: relative;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .wheel-container {
+        position: relative;
+        width: 310px;
+        height: 310px;
+        max-width: 78vw;
+        max-height: 78vw;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      #wheelCanvas {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        display: block;
+        border: 1px solid var(--md-sys-color-outline-variant);
+      }
+
+      .wheel-hub {
+        position: absolute;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: var(--md-sys-color-primary);
+        color: var(--md-sys-color-on-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+        border: 3px solid var(--md-sys-color-surface);
+        z-index: 5;
+      }
+
+      .wheel-hub span { font-size: 20px; }
+
+      .wheel-pointer {
+        position: absolute;
+        top: -12px;
+        z-index: 10;
+        width: 28px;
+        height: 38px;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        transform-origin: 50% 10%;
+        transition: transform 0.08s ease-out;
+        pointer-events: none;
+      }
+
+      .wheel-pointer svg {
+        width: 100%;
+        height: 100%;
+        fill: var(--md-sys-color-primary);
+      }
+
+      .wheel-pointer.ticker-bounce { transform: rotate(-18deg); }
+
+      /* Mode 2: Slot Reel View */
+      .slot-view {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .slot-machine-cabinet {
+        position: relative;
+        width: 100%;
+        max-width: 380px;
+        background-color: var(--md-sys-color-surface-container);
+        border: 1px solid var(--md-sys-color-outline-variant);
+        border-radius: var(--md-shape-corner-large);
+        padding: 0.85rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .slot-cabinet-header {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--md-sys-color-primary);
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+      }
+
+      .slot-viewport-frame {
+        position: relative;
+        width: 100%;
+        height: 195px;
+        background-color: var(--md-sys-color-surface);
+        border-radius: var(--md-shape-corner-medium);
+        border: 2px solid var(--md-sys-color-primary);
+        overflow: hidden;
+      }
+
+      .slot-center-bar {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 60px;
+        transform: translateY(-50%);
+        background: rgba(0, 109, 58, 0.08);
+        border-top: 2px solid var(--md-sys-color-primary);
+        border-bottom: 2px solid var(--md-sys-color-primary);
+        pointer-events: none;
+        z-index: 4;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 0.5rem;
+      }
+
+      [data-theme="dark"] .slot-center-bar { background: rgba(136, 252, 160, 0.12); }
+
+      .slot-arrow {
+        color: var(--md-sys-color-primary);
+        font-size: 20px;
+        font-weight: 700;
+      }
+
+      .slot-vignette-top,
+      .slot-vignette-bottom {
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 65px;
+        pointer-events: none;
+        z-index: 3;
+      }
+
+      .slot-vignette-top {
+        top: 0;
+        background: linear-gradient(to bottom, var(--md-sys-color-surface) 15%, rgba(0,0,0,0) 100%);
+      }
+
+      .slot-vignette-bottom {
+        bottom: 0;
+        background: linear-gradient(to top, var(--md-sys-color-surface) 15%, rgba(0,0,0,0) 100%);
+      }
+
+      .slot-reel-track {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        transform: translateY(0px);
+        will-change: transform, filter;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .slot-item {
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        color: var(--md-sys-color-on-surface);
+        padding: 0 1rem;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+
+      .slot-item.winner-highlight {
+        color: var(--md-sys-color-primary);
+        font-size: 1.45rem;
+      }
+
+      /* Mode 3: Crate Shoot with Conveyor & Dynamic Zoom View */
+      .crate-view {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .crate-stage-canvas {
+        width: 100%;
+        max-width: 480px;
+        height: 235px;
+        position: relative;
+        cursor: crosshair;
+        border-radius: var(--md-shape-corner-medium);
+        background-color: var(--md-sys-color-surface-container);
+        border: 1px solid var(--md-sys-color-outline-variant);
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.4s cubic-bezier(0.2, 0, 0, 1);
+      }
+
+      .crate-stage-canvas.zoomed-in {
+        transform: scale(1.12);
+      }
+
+      #crateCanvas {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+
+      .crate-crosshair-hud {
+        position: absolute;
+        top: 8px;
+        left: 10px;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: var(--md-sys-color-primary);
+        pointer-events: none;
+        background: rgba(255, 255, 255, 0.7);
+        padding: 2px 8px;
+        border-radius: var(--md-shape-corner-full);
+        border: 1px solid var(--md-sys-color-outline-variant);
+      }
+
+      [data-theme="dark"] .crate-crosshair-hud {
+        background: rgba(20, 28, 23, 0.85);
+      }
+
+      .crate-floating-winner {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.3);
+        font-family: 'Google Sans Flex', sans-serif;
+        font-size: 1.9rem;
+        font-weight: 800;
+        color: var(--md-sys-color-primary);
+        background-color: var(--md-sys-color-surface);
+        padding: 0.5rem 1.6rem;
+        border-radius: var(--md-shape-corner-full);
+        border: 2px solid var(--md-sys-color-primary);
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        z-index: 10;
+        transition: transform 0.5s var(--md-motion-easing-bounce), opacity 0.25s ease;
+      }
+
+      .crate-floating-winner.revealed {
+        transform: translate(-50%, -65%) scale(1);
+        opacity: 1;
+      }
+
+      /* Mode 4: Grabber Claw Machine (Filled Sea of Capsules & Real Physics Sway) */
+      .claw-view {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .claw-arcade-cabinet {
+        position: relative;
+        width: 100%;
+        max-width: 460px;
+        background-color: var(--md-sys-color-surface-container);
+        border: 1px solid var(--md-sys-color-outline-variant);
+        border-radius: var(--md-shape-corner-large);
+        padding: 0.75rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        user-select: none;
+        transition: transform 0.45s cubic-bezier(0.2, 0, 0, 1);
+        transform-origin: center center;
+      }
+
+      .claw-arcade-cabinet.zoomed-in {
+        transform: scale(1.18);
+        z-index: 50;
+      }
+
+      body.claw-zoomed-active header.m3-top-bar,
+      body.claw-zoomed-active .control-panel,
+      body.claw-zoomed-active footer.app-bottom-bar {
+        opacity: 0.12;
+        pointer-events: none;
+        filter: blur(1.5px);
+        transition: opacity 0.35s ease, filter 0.35s ease;
+      }
+
+      .claw-machine-marquee {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.8rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--md-sys-color-primary);
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        transition: color 0.2s ease;
+      }
+
+      .claw-chamber {
+        position: relative;
+        width: 100%;
+        height: 220px;
+        background: linear-gradient(180deg, rgba(0, 109, 58, 0.04) 0%, rgba(0, 109, 58, 0.12) 100%);
+        border: 1px solid var(--md-sys-color-outline-variant);
+        border-radius: var(--md-shape-corner-medium);
+        overflow: hidden;
+      }
+
+      [data-theme="dark"] .claw-chamber {
+        background: linear-gradient(180deg, rgba(136, 252, 160, 0.03) 0%, rgba(136, 252, 160, 0.10) 100%);
+      }
+
+      #clawCanvas {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+
+      /* Dramatic Floating Winner inside Claw Chamber */
+      .claw-winner-floating-banner {
+        position: absolute;
+        top: 46%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.4);
+        font-family: 'Google Sans Flex', 'JetBrains Mono', sans-serif;
+        font-size: 1.85rem;
+        font-weight: 800;
+        color: var(--md-sys-color-primary);
+        background-color: var(--md-sys-color-surface);
+        padding: 0.55rem 1.75rem;
+        border-radius: var(--md-shape-corner-full);
+        border: 2px solid var(--md-sys-color-primary);
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        z-index: 15;
+        transition: transform 0.45s var(--md-motion-easing-bounce), opacity 0.25s ease;
+      }
+
+      .claw-winner-floating-banner.revealed {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+      }
+
+      /* Clean Arcade Claw Console (Direction buttons, GRAB button, and drop button) */
+      .claw-console {
+        width: 100%;
+        margin-top: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.35rem 0.6rem;
+        background-color: var(--md-sys-color-surface);
+        border-radius: var(--md-shape-corner-medium);
+        border: 1px solid var(--md-sys-color-outline-variant);
+      }
+
+      .claw-arrow-group {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+      }
+
+      .claw-dir-btn {
+        width: 38px;
+        height: 38px;
+        border-radius: var(--md-shape-corner-small);
+        border: 1px solid var(--md-sys-color-outline-variant);
+        background: var(--md-sys-color-surface-container);
+        color: var(--md-sys-color-on-surface);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background-color 0.1s ease, transform 0.1s ease;
+      }
+
+      .claw-dir-btn:hover { background-color: var(--md-sys-color-primary-container); }
+      .claw-dir-btn:active { transform: scale(0.92); }
+
+      .claw-middle-grab-btn {
+        padding: 0.45rem 1.4rem;
+        border-radius: var(--md-shape-corner-full);
+        background-color: var(--md-sys-color-primary);
+        color: var(--md-sys-color-on-primary);
+        border: none;
+        font-family: inherit;
+        font-weight: 700;
+        font-size: 0.88rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+        transition: transform 0.1s ease, filter 0.15s ease;
+      }
+
+      .claw-middle-grab-btn:hover { filter: brightness(1.08); }
+      .claw-middle-grab-btn:active { transform: scale(0.95); }
+
+      .claw-drop-btn {
+        display: none;
+        padding: 0.45rem 1.35rem;
+        border-radius: var(--md-shape-corner-full);
+        background-color: #d32f2f;
+        color: #ffffff;
+        border: none;
+        font-family: inherit;
+        font-weight: 800;
+        font-size: 0.86rem;
+        letter-spacing: 0.03em;
+        cursor: pointer;
+        align-items: center;
+        gap: 0.4rem;
+        transition: transform 0.1s ease, filter 0.15s ease;
+        animation: dropPulse 1.2s ease-in-out infinite alternate;
+      }
+
+      @keyframes dropPulse {
+        0% { transform: scale(1); filter: brightness(1); }
+        100% { transform: scale(1.04); filter: brightness(1.15); }
+      }
+
+      .claw-drop-btn:hover { filter: brightness(1.2); }
+      .claw-drop-btn:active { transform: scale(0.94); }
+
+      .arcade-action-button {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background-color: var(--md-sys-color-primary-container);
+        border: 2px solid var(--md-sys-color-primary);
+        color: var(--md-sys-color-on-primary-container);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: transform 0.1s ease;
+      }
+
+      .arcade-action-button:active { transform: scale(0.92); }
+
+      /* Mode 5: Team Picker (Group Generator with Priority & Absentee Matching) */
+      .teams-view {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.85rem;
+      }
+
+      .teams-config-bar {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        background-color: var(--md-sys-color-surface-container);
+        border: 1px solid var(--md-sys-color-outline-variant);
+        border-radius: var(--md-shape-corner-large);
+        padding: 0.55rem 0.85rem;
+      }
+
+      .team-counter-group {
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+      }
+
+      .team-counter-label {
+        font-size: 0.78rem;
+        font-weight: 700;
+        color: var(--md-sys-color-on-surface);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .team-counter-box {
+        display: inline-flex;
+        align-items: center;
+        background-color: var(--md-sys-color-surface);
+        border: 1px solid var(--md-sys-color-outline-variant);
+        border-radius: var(--md-shape-corner-full);
+        padding: 2px;
+      }
+
+      .team-counter-btn {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: none;
+        background: transparent;
+        color: var(--md-sys-color-on-surface);
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 1rem;
+        transition: background-color 0.15s ease;
+      }
+
+      .team-counter-btn:hover {
+        background-color: var(--md-sys-color-primary-container);
+        color: var(--md-sys-color-on-primary-container);
+      }
+
+      .team-counter-input {
+        width: 38px;
+        text-align: center;
+        border: none;
+        background: transparent;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.95rem;
+        font-weight: 800;
+        color: var(--md-sys-color-primary);
+        outline: none;
+        -moz-appearance: textfield;
+      }
+      .team-counter-input::-webkit-outer-spin-button,
+      .team-counter-input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      .team-distribution-badge {
+        font-size: 0.74rem;
+        font-weight: 600;
+        color: var(--md-sys-color-secondary);
+      }
+
+      .teams-actions-row {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      /* Corporate & Polished Warning Banner for Unequal Team Members */
+      .team-warning-banner {
+        width: 100%;
+        display: none;
+        align-items: center;
+        gap: 0.65rem;
+        padding: 0.5rem 0.85rem;
+        border-radius: var(--md-shape-corner-medium);
+        background-color: rgba(230, 81, 0, 0.08);
+        border: 1px solid rgba(230, 81, 0, 0.28);
+        color: #b74d00;
+        font-size: 0.79rem;
+        font-weight: 600;
+        line-height: 1.35;
+      }
+
+      [data-theme="dark"] .team-warning-banner {
+        background-color: rgba(255, 167, 38, 0.1);
+        border-color: rgba(255, 167, 38, 0.35);
+        color: #ffb74d;
+      }
+
+      .team-warning-banner.visible {
+        display: flex;
+      }
+
+      /* Teams Grid */
+      .teams-grid {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(185px, 1fr));
+        gap: 0.65rem;
+        min-height: 100px;
+      }
+
+      .team-card {
+        background-color: var(--md-sys-color-surface-container-low);
+        border: 1px solid var(--md-sys-color-outline-variant);
+        border-radius: var(--md-shape-corner-large);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.25s cubic-bezier(0.2, 0, 0, 1);
+        animation: teamCardDrop 0.35s cubic-bezier(0.2, 0, 0, 1) both;
+      }
+
+      @keyframes teamCardDrop {
+        0% { opacity: 0; transform: translateY(10px) scale(0.97); }
+        100% { opacity: 1; transform: translateY(0) scale(1); }
+      }
+
+      .team-card-header {
+        padding: 0.45rem 0.7rem;
+        background-color: var(--md-sys-color-surface-container);
+        border-bottom: 1px solid var(--md-sys-color-outline-variant);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .team-card-title {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.78rem;
+        font-weight: 800;
+        letter-spacing: 0.03em;
+        color: var(--md-sys-color-primary);
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+      }
+
+      .team-card-count {
+        font-size: 0.68rem;
+        font-weight: 700;
+        color: var(--md-sys-color-secondary);
+        background: var(--md-sys-color-surface);
+        padding: 1px 6px;
+        border-radius: var(--md-shape-corner-full);
+        border: 1px solid var(--md-sys-color-outline-variant);
+      }
+
+      .team-members-list {
+        padding: 0.45rem 0.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+        flex: 1;
+      }
+
+      .team-member-item {
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+        padding: 0.28rem 0.5rem;
+        background-color: var(--md-sys-color-surface);
+        border: 1px solid var(--md-sys-color-outline-variant);
+        border-radius: var(--md-shape-corner-small);
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--md-sys-color-on-surface);
+        animation: memberDealIn 0.3s cubic-bezier(0.2, 0, 0, 1) both;
+      }
+
+      @keyframes memberDealIn {
+        0% { opacity: 0; transform: translateX(-6px); }
+        100% { opacity: 1; transform: translateX(0); }
+      }
+
+      .team-member-avatar {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background-color: var(--md-sys-color-primary-container);
+        color: var(--md-sys-color-on-primary-container);
+        font-size: 0.65rem;
+        font-weight: 800;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      /* Absentee Management at Bottom */
+      .absentee-panel {
+        width: 100%;
+        background-color: var(--md-sys-color-surface-container);
+        border: 1px solid var(--md-sys-color-outline-variant);
+        border-radius: var(--md-shape-corner-large);
+        padding: 0.65rem 0.85rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.45rem;
+      }
+
+      .absentee-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .absentee-title {
+        font-size: 0.76rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--md-sys-color-secondary);
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+      }
+
+      .absentee-stats {
+        font-size: 0.73rem;
+        font-weight: 600;
+        color: var(--md-sys-color-secondary);
+      }
+
+      .absentee-input-row {
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+      }
+
+      .absentee-input {
+        flex: 1;
+        padding: 0.35rem 0.75rem;
+        font-size: 0.8rem;
+        border-radius: var(--md-shape-corner-full);
+        border: 1px solid var(--md-sys-color-outline-variant);
+        background-color: var(--md-sys-color-surface);
+        color: var(--md-sys-color-on-surface);
+        outline: none;
+      }
+      .absentee-input:focus { border-color: var(--md-sys-color-primary); }
+
+      .absentee-chips-wrap {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.35rem;
+        min-height: 26px;
+        align-items: center;
+      }
+
+      .absent-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.18rem 0.55rem;
+        font-size: 0.73rem;
+        font-weight: 600;
+        border-radius: var(--md-shape-corner-full);
+        background-color: var(--md-sys-color-surface);
+        border: 1px solid var(--md-sys-color-outline-variant);
+        color: var(--md-sys-color-on-surface);
+      }
+
+      .absent-chip-remove {
+        cursor: pointer;
+        color: var(--md-sys-color-outline);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+      }
+      .absent-chip-remove:hover { color: #d32f2f; }
+
+      /* --- Action Controls (Compact) --- */
+      .control-panel {
+        margin-top: 0.85rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.65rem;
+        width: 100%;
+      }
+
+      .m3-spin-fab {
+        height: 48px;
+        padding: 0 2.2rem;
+        font-size: 1.05rem;
+        letter-spacing: 0.02em;
+        border-radius: var(--md-shape-corner-full);
+        border: none;
+        background-color: var(--md-sys-color-primary);
+        color: var(--md-sys-color-on-primary);
+        font-family: inherit;
+        font-weight: 700;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: transform 0.1s ease, filter 0.15s ease;
+      }
+
+      .m3-spin-fab:hover { filter: brightness(1.08); }
+      .m3-spin-fab:active { transform: scale(0.96); }
+      .m3-spin-fab:disabled { opacity: 0.45; cursor: not-allowed; }
+
+      .panel-options {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 1.25rem;
+        font-size: 0.82rem;
+      }
+
+      .m3-switch-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        user-select: none;
+        color: var(--md-sys-color-on-surface-variant);
+        font-weight: 500;
+      }
+
+      .m3-switch {
+        position: relative;
+        width: 38px;
+        height: 22px;
+        border-radius: var(--md-shape-corner-full);
+        background-color: var(--md-sys-color-surface-container-highest);
+        border: 1px solid var(--md-sys-color-outline);
+        transition: background-color 0.2s ease;
+      }
+
+      .m3-switch::after {
+        content: "";
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background-color: var(--md-sys-color-outline);
+        transition: transform 0.2s ease;
+      }
+
+      input[type="checkbox"]:checked + .m3-switch {
+        background-color: var(--md-sys-color-primary);
+        border-color: var(--md-sys-color-primary);
+      }
+
+      input[type="checkbox"]:checked + .m3-switch::after {
+        transform: translateX(16px);
+        background-color: var(--md-sys-color-on-primary);
+      }
+
+      input[type="checkbox"].sr-only {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .m3-btn-outlined-sm {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.3rem 0.75rem;
+        border-radius: var(--md-shape-corner-full);
+        border: 1px solid var(--md-sys-color-outline-variant);
+        background: transparent;
+        color: var(--md-sys-color-primary);
+        font-family: inherit;
+        font-size: 0.78rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.15s ease;
+      }
+
+      .m3-btn-outlined-sm:hover {
+        background-color: var(--md-sys-color-primary-container);
+        color: var(--md-sys-color-on-primary-container);
+      }
+
+      /* --- Compact Bottom Toolbar (Watermark, Sound, Dark/Light Mode) --- */
+      footer.app-bottom-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.5rem 1.25rem;
+        width: 100%;
+        max-width: 900px;
+        margin: 0 auto;
+        border-top: 1px solid var(--md-sys-color-outline-variant);
+        user-select: none;
+      }
+
+      .watermark-credit {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: var(--md-sys-color-outline);
+        opacity: 0.42;
+        letter-spacing: -0.01em;
+      }
+
+      .bottom-tools {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+      }
+
+      .m3-btn-icon-sm {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: 1px solid var(--md-sys-color-outline-variant);
+        background: var(--md-sys-color-surface);
+        color: var(--md-sys-color-on-surface-variant);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background-color 0.15s ease, transform 0.1s ease;
+      }
+
+      .m3-btn-icon-sm:hover {
+        background-color: var(--md-sys-color-surface-container-high);
+        color: var(--md-sys-color-on-surface);
+      }
+
+      .m3-btn-icon-sm:active { transform: scale(0.92); }
+
+      /* --- Winner Modal --- */
+      .m3-scrim {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(3px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 100;
+        padding: 1rem;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+      }
+
+      .m3-scrim.visible { opacity: 1; }
+
+      .m3-dialog {
+        background-color: var(--md-sys-color-surface);
+        color: var(--md-sys-color-on-surface);
+        border-radius: var(--md-shape-corner-extra-large);
+        border: 1px solid var(--md-sys-color-outline-variant);
+        padding: 1.75rem;
+        width: 100%;
+        max-width: 440px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        transform: scale(0.93);
+        transition: transform 0.25s var(--md-motion-easing-bounce);
+      }
+
+      .m3-scrim.visible .m3-dialog { transform: scale(1); }
+
+      .winner-trophy-badge {
+        width: 56px;
+        height: 56px;
+        border-radius: var(--md-shape-corner-full);
+        background-color: var(--md-sys-color-primary-container);
+        color: var(--md-sys-color-on-primary-container);
+        border: 1px solid var(--md-sys-color-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 0.75rem;
+      }
+
+      .winner-trophy-badge span { font-size: 30px; }
+
+      .dialog-kicker {
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--md-sys-color-secondary);
+      }
+
+      .winner-name-display {
+        font-size: 2.2rem;
+        font-weight: 800;
+        line-height: 1.2;
+        color: var(--md-sys-color-primary);
+        margin: 0.35rem 0 1.25rem;
+        word-break: break-word;
+      }
+
+      .winner-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.65rem;
+        width: 100%;
+        justify-content: center;
+      }
+
+      #confettiCanvas {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 105;
+      }
+
+      /* --- Roster Modal --- */
+      .modal-content-wide {
+        max-width: 480px;
+        text-align: left;
+        align-items: stretch;
+      }
+
+      .modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 0.75rem;
+      }
+
+      .modal-header h2 { font-size: 1.15rem; font-weight: 700; }
+
+      .m3-textarea {
+        width: 100%;
+        height: 160px;
+        border-radius: var(--md-shape-corner-medium);
+        border: 1px solid var(--md-sys-color-outline-variant);
+        background-color: var(--md-sys-color-surface-container-low);
+        color: var(--md-sys-color-on-surface);
+        padding: 0.65rem;
+        font-family: inherit;
+        font-size: 0.9rem;
+        line-height: 1.45;
+        resize: vertical;
+        outline: none;
+      }
+
+      .m3-textarea:focus { border-color: var(--md-sys-color-primary); }
+
+      .roster-stats-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 0.75rem;
+        color: var(--md-sys-color-secondary);
+        margin-top: 0.4rem;
+      }
+
+      /* Clean Snackbar */
+      .m3-snackbar {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%) translateY(90px);
+        background-color: var(--md-sys-color-inverse-surface);
+        color: var(--md-sys-color-inverse-on-surface);
+        padding: 0.75rem 1.25rem;
+        border-radius: var(--md-shape-corner-medium);
+        border: 1px solid var(--md-sys-color-outline-variant);
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+        font-size: 0.85rem;
+        font-weight: 500;
+        z-index: 200;
+        transition: transform 0.2s var(--md-motion-easing-bounce), opacity 0.2s ease;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .m3-snackbar.visible {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .m3-snackbar .material-symbols-outlined {
+        color: var(--md-sys-color-primary);
+        font-size: 18px;
+      }
+
+      @media (max-width: 680px) {
+        header.m3-top-bar {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 0.45rem;
+          padding: 0.5rem 0.85rem;
+        }
+        .header-top-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          width: 100%;
+        }
+        .m3-segmented-control { width: 100%; }
+        .m3-segment-btn {
+          flex: 1;
+          justify-content: center;
+          padding: 0.35rem 0.2rem;
+          font-size: 0.7rem;
+        }
+        .stage-card {
+          padding: 0.85rem;
+          min-height: 340px;
+        }
+        .wheel-container {
+          width: 260px;
+          height: 260px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Full-Screen Loading Screen Overlay -->
+    <div class="app-loading-overlay" id="appLoadingOverlay">
+      <div class="loading-center">
+        <h1 class="loading-title">Student Picker</h1>
+      </div>
+      <div class="loading-bottom-right">
+        <span class="loading-text">loading...</span>
+        <div class="loading-spinner" aria-hidden="true"></div>
+      </div>
+    </div>
+
+    <!-- Canvas for Confetti Celebration -->
+    <canvas id="confettiCanvas"></canvas>
+
+    <!-- Compact Top App Bar -->
+    <header class="m3-top-bar">
+      <div class="header-top-row">
+        <div class="app-brand">
+          <div class="app-title-group">
+            <div class="app-title-row">
+              <h1>Student Picker</h1>
+              <button class="m3-btn-edit-names" id="openRosterBtn" title="Edit Classroom Names">
+                <span class="material-symbols-outlined" style="font-size: 16px;">edit_note</span>
+                <span>Edit Names</span>
+              </button>
+            </div>
+            <div class="pool-badge" id="poolCountHeader">Loading students...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Segmented Mode Switcher (Wheel | Slot Reel | Crate Shoot | Grabber | Team Picker) -->
+      <div class="m3-segmented-control" id="modeSegmentedControl" data-mode="wheel">
+        <div class="m3-segmented-indicator"></div>
+        <button class="m3-segment-btn" data-value="wheel" title="Wheel Mode">
+          <span class="material-symbols-outlined" style="font-size: 16px;">pie_chart</span>
+          <span>Wheel</span>
+        </button>
+        <button class="m3-segment-btn" data-value="slot" title="Slot Reel Mode">
+          <span class="material-symbols-outlined" style="font-size: 16px;">view_headline</span>
+          <span>Slot Reel</span>
+        </button>
+        <button class="m3-segment-btn" data-value="crate" title="Crate Shoot Mode">
+          <span class="material-symbols-outlined" style="font-size: 16px;">crisis_alert</span>
+          <span>Crate Shoot</span>
+        </button>
+        <button class="m3-segment-btn" data-value="claw" title="Grabber Claw Mode">
+          <span class="material-symbols-outlined" style="font-size: 16px;">pan_tool</span>
+          <span>Grabber</span>
+        </button>
+        <button class="m3-segment-btn" data-value="teams" title="Team Picker Mode">
+          <span class="material-symbols-outlined" style="font-size: 16px;">groups</span>
+          <span>Teams</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Stage -->
+    <main class="app-main">
+      <div class="stage-card">
+        <!-- Mode 1: Wheel View -->
+        <div class="wheel-view" id="wheelSection">
+          <div class="wheel-container">
+            <div class="wheel-pointer" id="wheelPointer">
+              <svg viewBox="0 0 24 32">
+                <path d="M12 32 L2 6 C0 3 2 0 6 0 L18 0 C22 0 24 3 22 6 Z" />
+              </svg>
+            </div>
+            <canvas id="wheelCanvas" width="760" height="760"></canvas>
+            <div class="wheel-hub">
+              <span class="material-symbols-outlined">school</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mode 2: Slot Reel View -->
+        <div class="slot-view" id="slotSection">
+          <div class="slot-machine-cabinet">
+            <div class="slot-cabinet-header">
+              <span class="material-symbols-outlined" style="font-size: 16px;">token</span>
+              <span>Express Slot Reel</span>
+              <span class="material-symbols-outlined" style="font-size: 16px;">token</span>
+            </div>
+            <div class="slot-viewport-frame">
+              <div class="slot-vignette-top"></div>
+              <div class="slot-center-bar">
+                <span class="slot-arrow">▶</span>
+                <span class="slot-arrow">◀</span>
+              </div>
+              <div class="slot-vignette-bottom"></div>
+              <div class="slot-reel-track" id="slotReelTrack"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mode 3: Crate Shoot with Conveyor & Dynamic Zoom View -->
+        <div class="crate-view" id="crateSection">
+          <div class="crate-stage-canvas" id="crateStageArea" title="Click to Shoot Crate!">
+            <div class="crate-crosshair-hud" id="crateHudStatus">
+              <span class="material-symbols-outlined" style="font-size: 15px;">track_changes</span>
+              <span id="crateHudText">CONVEYOR ACTIVE</span>
+            </div>
+            <canvas id="crateCanvas" width="960" height="470"></canvas>
+            <div class="crate-floating-winner" id="crateFloatingWinner">Student Name</div>
+          </div>
+        </div>
+
+        <!-- Mode 4: Grabber Claw View (Filled Sea of Capsules & Real Physics Sway) -->
+        <div class="claw-view" id="clawSection">
+          <div class="claw-arcade-cabinet" id="clawCabinet">
+            <div class="claw-machine-marquee">
+              <span class="material-symbols-outlined" style="font-size: 18px;">sports_esports</span>
+              <span id="clawMarqueeText">GRABBER CLAW</span>
+              <span class="material-symbols-outlined" style="font-size: 18px;">sports_esports</span>
+            </div>
+            <div class="claw-chamber" id="clawChamberArea">
+              <canvas id="clawCanvas" width="900" height="440"></canvas>
+              <div class="claw-winner-floating-banner" id="clawWinnerFloatingBanner">Winner Name</div>
+            </div>
+            <div class="claw-console">
+              <!-- Replaced joystick with Left and Right arrow buttons -->
+              <div class="claw-arrow-group">
+                <button class="claw-dir-btn" id="clawLeftBtn" title="Move Left (← or A)">
+                  <span class="material-symbols-outlined" style="font-size: 20px;">arrow_back</span>
+                </button>
+                <button class="claw-dir-btn" id="clawRightBtn" title="Move Right (→ or D)">
+                  <span class="material-symbols-outlined" style="font-size: 20px;">arrow_forward</span>
+                </button>
+              </div>
+
+              <!-- Initial Center Grab Button -->
+              <button class="claw-middle-grab-btn" id="clawCenterGrabBtn">
+                <span class="material-symbols-outlined" style="font-size: 17px;">pan_tool</span>
+                <span>GRAB</span>
+              </button>
+
+              <!-- Dynamic Drop Claw Button that appears when zoomed into machine -->
+              <button class="claw-drop-btn" id="clawDropBtn" title="Drop Claw Now (Space)">
+                <span class="material-symbols-outlined" style="font-size: 18px;">arrow_downward</span>
+                <span>DROP CLAW</span>
+              </button>
+
+              <div class="arcade-action-button" id="clawArcadeTriggerBtn" title="Drop Claw">
+                <span class="material-symbols-outlined" style="font-size: 20px;">touch_app</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mode 5: Team Picker (Group Generator with Priority & Absentee Matching) -->
+        <div class="teams-view" id="teamsSection">
+          <!-- Configuration Bar -->
+          <div class="teams-config-bar">
+            <div class="team-counter-group">
+              <span class="team-counter-label">Teams</span>
+              <div class="team-counter-box">
+                <button class="team-counter-btn" id="teamDecBtn" title="Decrease Teams">−</button>
+                <input type="number" class="team-counter-input" id="teamCountInput" value="4" min="2" max="15" />
+                <button class="team-counter-btn" id="teamIncBtn" title="Increase Teams">+</button>
+              </div>
+              <span class="team-distribution-badge" id="teamDistInfo">4 teams</span>
+            </div>
+
+            <div class="teams-actions-row">
+              <button class="m3-btn-outlined-sm" id="copyTeamsBtn" title="Copy Team Rosters to Clipboard">
+                <span class="material-symbols-outlined" style="font-size: 15px;">content_copy</span>
+                <span>Copy</span>
+              </button>
+              <button class="m3-spin-fab" id="generateTeamsBtn" style="height: 38px; padding: 0 1.25rem; font-size: 0.84rem;">
+                <span class="material-symbols-outlined" style="font-size: 17px;">shuffle</span>
+                <span>GENERATE TEAMS</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Unequal Team Members Warning Banner -->
+          <div class="team-warning-banner" id="teamWarningBanner">
+            <span class="material-symbols-outlined" style="font-size: 18px;">warning</span>
+            <span id="teamWarningText">Warning! There will be unequal team members with 3 group(s).</span>
+          </div>
+
+          <!-- Teams Grid Display -->
+          <div class="teams-grid" id="teamsGridContainer">
+            <!-- Dynamically populated team cards -->
+          </div>
+
+          <!-- Absentee Manager with Smart Matching -->
+          <div class="absentee-panel">
+            <div class="absentee-header">
+              <span class="absentee-title">
+                <span class="material-symbols-outlined" style="font-size: 16px;">person_off</span>
+                <span>Absent Students (Auto-Matched)</span>
+              </span>
+              <span class="absentee-stats" id="absenteeStatsText">27 Present • 0 Absent</span>
+            </div>
+
+            <div class="absentee-input-row">
+              <input
+                type="text"
+                class="absentee-input"
+                id="absentInput"
+                placeholder="Type name (e.g. vuthisak, tara) and press Enter or click Mark Absent..."
+              />
+              <button class="m3-btn-outlined-sm" id="addAbsentBtn">
+                <span class="material-symbols-outlined" style="font-size: 15px;">add</span>
+                <span>Mark Absent</span>
+              </button>
+              <button class="m3-btn-outlined-sm" id="clearAbsentBtn" style="display: none;">
+                <span>Clear All</span>
+              </button>
+            </div>
+
+            <div class="absentee-chips-wrap" id="absentChipsContainer">
+              <span style="font-size: 0.74rem; color: var(--md-sys-color-secondary); opacity: 0.75;">No students marked absent</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Compact Bottom Controls -->
+        <div class="control-panel" id="mainControlPanel">
+          <button class="m3-spin-fab" id="spinBtn" title="Press Space or Click">
+            <span class="material-symbols-outlined">play_arrow</span>
+            <span id="spinBtnText">SPIN WHEEL</span>
+          </button>
+
+          <div class="panel-options">
+            <label class="m3-switch-label" title="Remove student from drawing pool after being selected">
+              <input type="checkbox" id="removeOnPickCheck" class="sr-only" />
+              <div class="m3-switch"></div>
+              <span>Remove winner after pick</span>
+            </label>
+
+            <button class="m3-btn-outlined-sm" id="resetPoolBtn">
+              <span class="material-symbols-outlined" style="font-size: 15px;">refresh</span>
+              <span>Reset Pool (<span id="poolCounterText">0</span>)</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Compact Bottom Bar (Watermark & Relocated Sound/Theme Controls) -->
+    <footer class="app-bottom-bar">
+      <div class="watermark-credit">&lt;/&gt; by zer0day</div>
+      <div class="bottom-tools">
+        <button class="m3-btn-icon-sm" id="soundToggleBtn" title="Toggle Sound">
+          <span class="material-symbols-outlined" id="soundIcon" style="font-size: 17px;">volume_up</span>
+        </button>
+        <button class="m3-btn-icon-sm" id="themeToggleBtn" title="Toggle Theme">
+          <span class="material-symbols-outlined" id="themeIcon" style="font-size: 17px;">dark_mode</span>
+        </button>
+      </div>
+    </footer>
+
+    <!-- Winner Celebration Modal -->
+    <div class="m3-scrim" id="winnerScrim">
+      <div class="m3-dialog">
+        <div class="winner-trophy-badge">
+          <span class="material-symbols-outlined">celebration</span>
+        </div>
+        <div class="dialog-kicker">We Have A Winner!</div>
+        <div class="winner-name-display" id="winnerNameText">Student Name</div>
+
+        <div class="winner-actions">
+          <button class="m3-btn-outlined-sm" id="winnerRemoveBtn" style="padding: 0.45rem 1rem; font-size: 0.85rem;">
+            <span class="material-symbols-outlined" style="font-size: 17px;">person_remove</span>
+            <span>Remove from Pool</span>
+          </button>
+          <button class="m3-spin-fab" id="winnerSpinAgainBtn" style="height: 42px; padding: 0 1.5rem; font-size: 0.9rem;">
+            <span class="material-symbols-outlined" style="font-size: 18px;">replay</span>
+            <span>Pick Again</span>
+          </button>
+          <button class="m3-btn-icon" id="winnerCloseBtn" style="position: absolute; top: 12px; right: 12px; width: 32px; height: 32px;" title="Close">
+            <span class="material-symbols-outlined" style="font-size: 18px;">close</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Roster Manager Modal (Completely clean, zero mention of asterisks/exclusion) -->
+    <div class="m3-scrim" id="rosterScrim">
+      <div class="m3-dialog modal-content-wide">
+        <div class="modal-header">
+          <h2>Manage Classroom Roster</h2>
+          <button class="m3-btn-icon" id="rosterCloseBtn" style="width: 32px; height: 32px;">
+            <span class="material-symbols-outlined" style="font-size: 18px;">close</span>
+          </button>
+        </div>
+
+        <p style="font-size: 0.85rem; color: var(--md-sys-color-secondary); margin-bottom: 0.4rem;">
+          Enter student names (one per line). Names are loaded automatically from <code>names.txt</code>.
+        </p>
+
+        <textarea class="m3-textarea" id="rosterInput" placeholder="John weinder&#10;Alan tery&#10;John Doe"></textarea>
+
+        <div class="roster-stats-bar">
+          <span id="rosterStatsInfo">0 total students</span>
+          <span style="font-size: 0.75rem; opacity: 0.8;">Classroom Roster</span>
+        </div>
+
+        <div style="display: flex; gap: 0.5rem; margin-top: 0.75rem; flex-wrap: wrap;">
+          <input type="file" id="fileUploadInput" accept=".txt" style="display: none;" />
+          <button class="m3-btn-outlined-sm" id="uploadFileBtn">
+            <span class="material-symbols-outlined" style="font-size: 16px;">upload_file</span>
+            <span>Import .txt</span>
+          </button>
+          <button class="m3-btn-outlined-sm" id="reloadFileBtn">
+            <span class="material-symbols-outlined" style="font-size: 16px;">sync</span>
+            <span>Reload names.txt</span>
+          </button>
+          <button class="m3-spin-fab" id="saveRosterBtn" style="margin-left: auto; height: 34px; padding: 0 1rem; font-size: 0.8rem;">
+            <span class="material-symbols-outlined" style="font-size: 16px;">save</span>
+            <span>Save & Apply</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- M3 Snackbar Toast -->
+    <div class="m3-snackbar" id="snackbar">
+      <span class="material-symbols-outlined" id="snackbarIcon">info</span>
+      <span id="snackbarText">Ready</span>
+    </div>
+
+    <script>
+      /* =========================================================================
+         Student Picker - Compact Material Design 3 Implementation
+         Modes: Wheel | Slot Reel | Crate Shoot (Conveyor) | Grabber (Physics Sway)
+         Silent Asterisk Exclusion: Fully automated & invisible to onlookers
+         ========================================================================= */
+
+      function parseStudentEntry(line) {
+        const trimmed = line.trim();
+        const hasAsterisk = trimmed.includes('*');
+        const hasBoost = trimmed.includes('`');
+        const clean = trimmed.replace(/[*`]/g, '').trim();
+        return {
+          raw: trimmed,
+          displayName: clean.length > 0 ? clean : trimmed,
+          hasAsterisk: hasAsterisk,
+          hasBoost: hasBoost
+        };
+      }
+
+      function levenshteinDistance(s1, s2) {
+        const a = s1.toLowerCase();
+        const b = s2.toLowerCase();
+        const m = a.length;
+        const n = b.length;
+        const d = [];
+        for (let i = 0; i <= m; i++) d[i] = [i];
+        for (let j = 0; j <= n; j++) d[0][j] = j;
+        for (let i = 1; i <= m; i++) {
+          for (let j = 1; j <= n; j++) {
+            const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+            d[i][j] = Math.min(
+              d[i - 1][j] + 1,
+              d[i][j - 1] + 1,
+              d[i - 1][j - 1] + cost
+            );
+          }
+        }
+        return d[m][n];
+      }
+
+      class SoundEngine {
+        constructor() {
+          this.ctx = null;
+          this.muted = false;
+        }
+
+        init() {
+          if (!this.ctx) {
+            const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+            if (AudioContextClass) this.ctx = new AudioContextClass();
+          }
+          if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
+        }
+
+        playTick(pitchOffset = 1.0) {
+          if (this.muted) return;
+          this.init();
+          if (!this.ctx) return;
+          try {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'triangle';
+            const baseFreq = 950 * pitchOffset;
+            osc.frequency.setValueAtTime(baseFreq, this.ctx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(baseFreq * 0.4, this.ctx.currentTime + 0.035);
+            gain.gain.setValueAtTime(0.18, this.ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.035);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start();
+            osc.stop(this.ctx.currentTime + 0.035);
+          } catch (e) {}
+        }
+
+        playSniperShot() {
+          if (this.muted) return;
+          this.init();
+          if (!this.ctx) return;
+          try {
+            // High-power rifle crack followed by low sub explosion
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(380, this.ctx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(25, this.ctx.currentTime + 0.45);
+            gain.gain.setValueAtTime(0.4, this.ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.5);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start();
+            osc.stop(this.ctx.currentTime + 0.5);
+          } catch (e) {}
+        }
+
+        playMechanicalHum() {
+          if (this.muted) return;
+          this.init();
+          if (!this.ctx) return;
+          try {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(170, this.ctx.currentTime);
+            gain.gain.setValueAtTime(0.05, this.ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.12);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start();
+            osc.stop(this.ctx.currentTime + 0.12);
+          } catch (e) {}
+        }
+
+        playClawGrab() {
+          if (this.muted) return;
+          this.init();
+          if (!this.ctx) return;
+          try {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(320, this.ctx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(560, this.ctx.currentTime + 0.16);
+            gain.gain.setValueAtTime(0.18, this.ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.18);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start();
+            osc.stop(this.ctx.currentTime + 0.18);
+          } catch (e) {}
+        }
+
+        playLockOn() {
+          if (this.muted) return;
+          this.init();
+          if (!this.ctx) return;
+          try {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(880, this.ctx.currentTime);
+            osc.frequency.setValueAtTime(1174, this.ctx.currentTime + 0.08);
+            gain.gain.setValueAtTime(0.12, this.ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.16);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start();
+            osc.stop(this.ctx.currentTime + 0.16);
+          } catch (e) {}
+        }
+
+        playWinFanfare() {
+          if (this.muted) return;
+          this.init();
+          if (!this.ctx) return;
+          try {
+            const notes = [523.25, 659.25, 783.99, 1046.50];
+            notes.forEach((freq, idx) => {
+              const start = this.ctx.currentTime + idx * 0.08;
+              const osc = this.ctx.createOscillator();
+              const gain = this.ctx.createGain();
+              osc.type = 'sine';
+              osc.frequency.setValueAtTime(freq, start);
+              gain.gain.setValueAtTime(0, start);
+              gain.gain.linearRampToValueAtTime(0.2, start + 0.02);
+              gain.gain.exponentialRampToValueAtTime(0.001, start + 0.5);
+              osc.connect(gain);
+              gain.connect(this.ctx.destination);
+              osc.start(start);
+              osc.stop(start + 0.5);
+            });
+          } catch (e) {}
+        }
+
+        playClick() {
+          if (this.muted) return;
+          this.init();
+          if (!this.ctx) return;
+          try {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(420, this.ctx.currentTime);
+            gain.gain.setValueAtTime(0.1, this.ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.02);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start();
+            osc.stop(this.ctx.currentTime + 0.02);
+          } catch (e) {}
+        }
+      }
+
+      class ConfettiEngine {
+        constructor(canvas) {
+          this.canvas = canvas;
+          this.ctx = canvas.getContext('2d');
+          this.particles = [];
+          this.animating = false;
+          this.resize();
+          window.addEventListener('resize', () => this.resize());
+        }
+
+        resize() {
+          this.canvas.width = window.innerWidth * window.devicePixelRatio;
+          this.canvas.height = window.innerHeight * window.devicePixelRatio;
+          this.ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+        }
+
+        launch() {
+          const colors = ['#006d3a', '#88fca0', '#b8f5be', '#39656b', '#ffd700', '#ffffff', '#2e7d32'];
+          this.particles = [];
+          const count = 100;
+          const cx = window.innerWidth / 2;
+          const cy = window.innerHeight * 0.4;
+
+          for (let i = 0; i < count; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const velocity = 7 + Math.random() * 12;
+            this.particles.push({
+              x: cx,
+              y: cy,
+              vx: Math.cos(angle) * velocity,
+              vy: Math.sin(angle) * velocity - 4,
+              color: colors[Math.floor(Math.random() * colors.length)],
+              size: 5 + Math.random() * 7,
+              rotation: Math.random() * 360,
+              rotSpeed: (Math.random() - 0.5) * 10,
+              opacity: 1,
+              decay: 0.008 + Math.random() * 0.008,
+            });
+          }
+
+          if (!this.animating) {
+            this.animating = true;
+            this.loop();
+          }
+        }
+
+        loop() {
+          if (!this.animating) return;
+          this.ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+          let activeCount = 0;
+          for (const p of this.particles) {
+            if (p.opacity > 0) {
+              activeCount++;
+              p.x += p.vx;
+              p.y += p.vy;
+              p.vy += 0.32;
+              p.vx *= 0.98;
+              p.rotation += p.rotSpeed;
+              p.opacity -= p.decay;
+
+              this.ctx.save();
+              this.ctx.translate(p.x, p.y);
+              this.ctx.rotate((p.rotation * Math.PI) / 180);
+              this.ctx.globalAlpha = Math.max(0, p.opacity);
+              this.ctx.fillStyle = p.color;
+              this.ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+              this.ctx.restore();
+            }
+          }
+
+          if (activeCount > 0) {
+            requestAnimationFrame(() => this.loop());
+          } else {
+            this.animating = false;
+            this.ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+          }
+        }
+      }
+
+      const DEFAULT_LINES = [
+        'Ing Ing',
+        'Yanoukh',
+        'Ponita',
+        'Dawin',
+        'Phuong',
+        'Deta',
+        'Anyta',
+        'MengTech',
+        'Visal',
+        'You Inn',
+        'Munita',
+        'Nalen',
+        'Bella',
+        'Darany',
+        'Dane',
+        'Pikun',
+        'Bondith',
+        'Ratanak*',
+        'Tara`',
+        'Liza',
+        'Julyna',
+        'Panhaboth',
+        'Panhareach*',
+        'Sak`',
+        'Diana',
+        'Hengly',
+        'Visoth'
+      ];
+
+      const SLICE_COLORS_LIGHT = [
+        '#b8f5be', '#d4e8d1', '#a7f1bc', '#bcebf2',
+        '#c7f4d2', '#88fca0', '#d0edd3', '#a1ded0',
+      ];
+
+      const SLICE_COLORS_DARK = [
+        '#00522a', '#3a4b3a', '#1f4d53', '#124424',
+        '#1f5734', '#174b29',
+      ];
+
+      class App {
+        constructor() {
+          this.fullRoster = DEFAULT_LINES.map(parseStudentEntry);
+          this.activePool = [...this.fullRoster];
+          this.currentMode = 'wheel';
+          this.isSpinning = false;
+          this.currentWinner = null;
+
+          // Mode 1: Wheel
+          this.wheelAngle = 0;
+          this.wheelCanvas = document.getElementById('wheelCanvas');
+          this.wheelCtx = this.wheelCanvas.getContext('2d');
+          this.wheelPointer = document.getElementById('wheelPointer');
+
+          // Mode 2: Slot
+          this.slotReelTrack = document.getElementById('slotReelTrack');
+          this.slotItemHeight = 60;
+
+          // Mode 3: Crate Shoot (Conveyor Belt + Cinematic Zoom)
+          this.crateCanvas = document.getElementById('crateCanvas');
+          this.crateCtx = this.crateCanvas.getContext('2d');
+          this.crateFloatingWinner = document.getElementById('crateFloatingWinner');
+          this.crateStageArea = document.getElementById('crateStageArea');
+          this.crateHudText = document.getElementById('crateHudText');
+          this.crateConveyorOffset = 0;
+          this.crateList = [];
+          this.crateParticles = [];
+          this.crateCameraZoom = 1.0;
+          this.crateCameraTargetX = 480;
+          this.crateState = 'idle'; // 'idle' | 'tracking' | 'exploding'
+          this.crateTargetIndex = -1;
+          this.crateLastTime = performance.now();
+
+          // Mode 4: Grabber Claw (Pure Balls + Dynamic Sizing + Stacking Physics + 2D Sway + Zoom Reveal)
+          this.clawCanvas = document.getElementById('clawCanvas');
+          this.clawCtx = this.clawCanvas.getContext('2d');
+          this.clawCabinet = document.getElementById('clawCabinet');
+          this.clawMarqueeText = document.getElementById('clawMarqueeText');
+          this.clawWinnerFloatingBanner = document.getElementById('clawWinnerFloatingBanner');
+          this.clawCenterGrabBtn = document.getElementById('clawCenterGrabBtn');
+          this.clawDropBtn = document.getElementById('clawDropBtn');
+          this.clawArcadeTriggerBtn = document.getElementById('clawArcadeTriggerBtn');
+          this.clawTrolleyX = 0.5; // normalized 0.15 to 0.85
+          this.clawTargetTrolleyX = 0.5;
+          this.clawTrolleyVx = 0;
+          this.clawAngle = 0; // primary pendulum sway (rad)
+          this.clawAngularVel = 0;
+          this.clawSecondaryAngle = 0; // hub wobble (rad)
+          this.clawSecondaryVel = 0;
+          this.clawCableLength = 0.22; // normalized depth
+          this.clawTargetCableLength = 0.22;
+          this.clawState = 'idle'; // 'idle' | 'dropping' | 'grabbing' | 'lifting' | 'revealing'
+          this.clawAiming = false;
+          this.clawGrabbedBall = null;
+          this.clawBalls = [];
+          this.clawFixedBallRadius = null;
+          this.clawSmokeParticles = [];
+          this.clawShards = [];
+          this.clawZoomBall = null;
+          this.clawLastTime = performance.now();
+          this.clawInputDirection = 0; // -1 left, 1 right
+
+          // Mode 5: Team Picker (Group Generator with Priority & Absentee Matching)
+          this.teamCount = 4;
+          this.absentStudents = [];
+          this.teams = [];
+          this.teamCountInput = document.getElementById('teamCountInput');
+          this.teamDistInfo = document.getElementById('teamDistInfo');
+          this.teamWarningBanner = document.getElementById('teamWarningBanner');
+          this.teamWarningText = document.getElementById('teamWarningText');
+          this.teamsGridContainer = document.getElementById('teamsGridContainer');
+          this.absentInput = document.getElementById('absentInput');
+          this.absentChipsContainer = document.getElementById('absentChipsContainer');
+          this.absenteeStatsText = document.getElementById('absenteeStatsText');
+          this.clearAbsentBtn = document.getElementById('clearAbsentBtn');
+
+          // Audio & FX
+          this.sound = new SoundEngine();
+          this.confetti = new ConfettiEngine(document.getElementById('confettiCanvas'));
+
+          this.initTheme();
+          this.initListeners();
+          this.fetchNamesFile();
+          this.drawWheel();
+          this.populateSlotReel();
+          this.initCrateScene();
+          this.initClawScene();
+          this.updateTeamDistributionInfo();
+          this.generateTeams(false);
+
+          // Start continuous render loops for dynamic conveyor and physics sway
+          this.startContinuousLoops();
+        }
+
+        initTheme() {
+          const savedTheme = localStorage.getItem('m3_picker_theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+          document.documentElement.setAttribute('data-theme', savedTheme);
+          this.updateThemeIcon(savedTheme);
+        }
+
+        updateThemeIcon(theme) {
+          const icon = document.getElementById('themeIcon');
+          if (icon) icon.textContent = theme === 'dark' ? 'light_mode' : 'dark_mode';
+        }
+
+        toggleTheme() {
+          const current = document.documentElement.getAttribute('data-theme') || 'light';
+          const next = current === 'dark' ? 'light' : 'dark';
+          document.documentElement.setAttribute('data-theme', next);
+          localStorage.setItem('m3_picker_theme', next);
+          this.updateThemeIcon(next);
+          this.drawWheel();
+        }
+
+        showSnackbar(message, icon = 'info') {
+          const snackbar = document.getElementById('snackbar');
+          const snackbarText = document.getElementById('snackbarText');
+          const snackbarIcon = document.getElementById('snackbarIcon');
+          snackbarText.textContent = message;
+          snackbarIcon.textContent = icon;
+          snackbar.classList.add('visible');
+
+          if (this.snackbarTimeout) clearTimeout(this.snackbarTimeout);
+          this.snackbarTimeout = setTimeout(() => {
+            snackbar.classList.remove('visible');
+          }, 2800);
+        }
+
+        showLoadingScreen() {
+          const overlay = document.getElementById('appLoadingOverlay');
+          if (overlay) {
+            overlay.style.display = 'flex';
+            void overlay.offsetWidth;
+            overlay.classList.remove('fade-out');
+          }
+        }
+
+        dismissLoadingScreen() {
+          const overlay = document.getElementById('appLoadingOverlay');
+          if (!overlay || overlay.classList.contains('fade-out')) return;
+          // Smooth delay so the JetBrains Mono loading experience is clear and polished
+          setTimeout(() => {
+            overlay.classList.add('fade-out');
+            setTimeout(() => {
+              overlay.style.display = 'none';
+            }, 380);
+          }, 650);
+        }
+
+        async fetchNamesFile(showOverlay = false) {
+          if (showOverlay) this.showLoadingScreen();
+          try {
+            const res = await fetch('names.txt');
+            if (!res.ok) throw new Error(`Status ${res.status}`);
+            const text = await res.text();
+            const parsed = text
+              .split(/\r?\n/)
+              .map(s => s.trim())
+              .filter(s => s.length > 0)
+              .map(parseStudentEntry);
+
+            if (parsed.length > 0) {
+              this.fullRoster = parsed;
+              this.activePool = [...parsed];
+              this.showSnackbar(`Loaded ${parsed.length} student names from names.txt`, 'check_circle');
+            }
+          } catch (err) {
+            this.showSnackbar(`Ready with ${this.fullRoster.length} students`, 'school');
+          }
+          this.updateUI();
+          this.dismissLoadingScreen();
+        }
+
+        updateUI() {
+          const count = this.activePool.length;
+          const total = this.fullRoster.length;
+
+          document.getElementById('poolCountHeader').textContent = `${count} students`;
+          document.getElementById('poolCounterText').textContent = `${count}/${total}`;
+          document.getElementById('rosterInput').value = this.fullRoster.map(s => s.raw).join('\n');
+
+          const statsInfo = document.getElementById('rosterStatsInfo');
+          if (statsInfo) statsInfo.textContent = `${total} students in roster`;
+
+          const spinBtn = document.getElementById('spinBtn');
+          spinBtn.disabled = count === 0;
+
+          this.drawWheel();
+          this.populateSlotReel();
+          this.initCrateScene();
+          this.initClawScene();
+          this.updateTeamDistributionInfo();
+          this.generateTeams(false);
+        }
+
+        // Silent Asterisk Exclusion Algorithm + 12% Suffix Probability Boost (for names with `)
+        selectWinningIndex() {
+          const total = this.activePool.length;
+          if (total <= 1) return 0;
+
+          const standardIndices = [];
+          const asteriskIndices = [];
+
+          for (let i = 0; i < total; i++) {
+            if (this.activePool[i].hasAsterisk) {
+              asteriskIndices.push(i);
+            } else {
+              standardIndices.push(i);
+            }
+          }
+
+          // Pick from standard pool first; fallback to asterisk pool only when no standard names remain
+          const candidateIndices = standardIndices.length > 0 ? standardIndices : asteriskIndices;
+          if (candidateIndices.length === 0) return Math.floor(Math.random() * total);
+
+          // Apply 12% higher probability boost to candidates with suffix `
+          let totalWeight = 0;
+          const weights = candidateIndices.map((idx) => {
+            const w = this.activePool[idx].hasBoost ? 1.12 : 1.0;
+            totalWeight += w;
+            return w;
+          });
+
+          let randomThreshold = Math.random() * totalWeight;
+          for (let i = 0; i < candidateIndices.length; i++) {
+            randomThreshold -= weights[i];
+            if (randomThreshold <= 0) {
+              return candidateIndices[i];
+            }
+          }
+          return candidateIndices[candidateIndices.length - 1];
+        }
+
+        // --- Mode 1: Wheel ---
+        drawWheel() {
+          const canvas = this.wheelCanvas;
+          const ctx = this.wheelCtx;
+          const size = canvas.width;
+          const radius = size / 2;
+          const cx = radius;
+          const cy = radius;
+
+          ctx.clearRect(0, 0, size, size);
+
+          const count = this.activePool.length;
+          if (count === 0) {
+            ctx.beginPath();
+            ctx.arc(cx, cy, radius - 10, 0, 2 * Math.PI);
+            ctx.fillStyle = '#e0e4dd';
+            ctx.fill();
+            ctx.fillStyle = '#717971';
+            ctx.font = '600 24px "Google Sans Flex", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('Pool is Empty', cx, cy);
+            return;
+          }
+
+          const arc = (2 * Math.PI) / count;
+          const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+          const sliceColors = isDark ? SLICE_COLORS_DARK : SLICE_COLORS_LIGHT;
+          const textColor = isDark ? '#e0e4df' : '#161e19';
+
+          ctx.save();
+          ctx.translate(cx, cy);
+          ctx.rotate(this.wheelAngle);
+
+          for (let i = 0; i < count; i++) {
+            const startAngle = i * arc;
+            const endAngle = startAngle + arc;
+
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.arc(0, 0, radius - 8, startAngle, endAngle);
+            ctx.closePath();
+
+            ctx.fillStyle = sliceColors[i % sliceColors.length];
+            ctx.fill();
+
+            ctx.strokeStyle = isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.08)';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+
+            ctx.save();
+            ctx.rotate(startAngle + arc / 2);
+            ctx.textAlign = 'right';
+            ctx.textBaseline = 'middle';
+            ctx.fillStyle = textColor;
+
+            let fontSize = 26;
+            if (count > 25) fontSize = 16;
+            else if (count > 16) fontSize = 19;
+            else if (count > 10) fontSize = 23;
+
+            ctx.font = `600 ${fontSize}px "Google Sans Flex", sans-serif`;
+
+            const name = this.activePool[i].displayName;
+            const maxTextWidth = radius - 105;
+            let displayTxt = name;
+            if (ctx.measureText(displayTxt).width > maxTextWidth) {
+              while (displayTxt.length > 4 && ctx.measureText(displayTxt + '…').width > maxTextWidth) {
+                displayTxt = displayTxt.slice(0, -1);
+              }
+              displayTxt += '…';
+            }
+
+            ctx.fillText(displayTxt, radius - 42, 0);
+            ctx.restore();
+          }
+
+          ctx.beginPath();
+          ctx.arc(0, 0, radius - 8, 0, 2 * Math.PI);
+          ctx.strokeStyle = isDark ? '#414941' : '#c1c9bf';
+          ctx.lineWidth = 7;
+          ctx.stroke();
+
+          for (let i = 0; i < count; i++) {
+            const pegAngle = i * arc;
+            const px = Math.cos(pegAngle) * (radius - 8);
+            const py = Math.sin(pegAngle) * (radius - 8);
+
+            ctx.beginPath();
+            ctx.arc(px, py, 4.5, 0, 2 * Math.PI);
+            ctx.fillStyle = isDark ? '#88fca0' : '#006d3a';
+            ctx.fill();
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+          }
+
+          ctx.restore();
+        }
+
+        spinWheel(winningIndex) {
+          const count = this.activePool.length;
+          const arc = (2 * Math.PI) / count;
+
+          const targetSliceMid = winningIndex * arc + arc / 2;
+          const pointerAngle = -Math.PI / 2;
+
+          const currentNorm = this.wheelAngle % (2 * Math.PI);
+          const fullRotations = (7 + Math.random() * 5) * 2 * Math.PI;
+          const sliceJitter = (Math.random() - 0.5) * (arc * 0.72);
+          const stopAngle = pointerAngle - targetSliceMid + sliceJitter;
+
+          const totalDelta = fullRotations + ((stopAngle - currentNorm + 4 * Math.PI) % (2 * Math.PI));
+          const startAngle = this.wheelAngle;
+          const endAngle = startAngle + totalDelta;
+
+          const duration = 5400 + Math.random() * 1100;
+          const startTime = performance.now();
+          let lastTickSlice = -1;
+
+          const dramaticWheelEase = (p) => {
+            if (p <= 0) return 0;
+            if (p >= 1) return 1;
+            const base = 1 - Math.pow(1 - p, 4.4);
+            if (p > 0.95) {
+              const sub = (p - 0.95) / 0.05;
+              const settle = Math.sin(sub * Math.PI) * Math.exp(-sub * 2.8) * 0.0018;
+              return base + settle;
+            }
+            return base;
+          };
+
+          const animate = (now) => {
+            const elapsed = now - startTime;
+            const progress = Math.min(1, elapsed / duration);
+
+            const ease = dramaticWheelEase(progress);
+            this.wheelAngle = startAngle + totalDelta * ease;
+
+            const currentSliceUnderNeedle = Math.floor(
+              (((pointerAngle - this.wheelAngle) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI)) / arc
+            );
+
+            if (currentSliceUnderNeedle !== lastTickSlice) {
+              lastTickSlice = currentSliceUnderNeedle;
+              const speedRatio = Math.max(0.35, 1.15 - progress * 0.75);
+              this.sound.playTick(speedRatio);
+              this.wheelPointer.classList.add('ticker-bounce');
+              setTimeout(() => this.wheelPointer.classList.remove('ticker-bounce'), 65);
+            }
+
+            this.drawWheel();
+
+            if (progress < 1) {
+              requestAnimationFrame(animate);
+            } else {
+              this.wheelAngle = endAngle;
+              this.drawWheel();
+              setTimeout(() => this.onWinnerSelected(), 450);
+            }
+          };
+
+          requestAnimationFrame(animate);
+        }
+
+        // --- Mode 2: Slot Reel ---
+        populateSlotReel() {
+          const track = this.slotReelTrack;
+          track.innerHTML = '';
+          const count = this.activePool.length;
+
+          if (count === 0) {
+            track.innerHTML = '<div class="slot-item">Pool is Empty</div>';
+            return;
+          }
+
+          const repetitions = Math.max(25, Math.ceil(240 / count));
+          for (let r = 0; r < repetitions; r++) {
+            for (let i = 0; i < count; i++) {
+              const div = document.createElement('div');
+              div.className = 'slot-item';
+              div.textContent = this.activePool[i].displayName;
+              div.dataset.index = i;
+              track.appendChild(div);
+            }
+          }
+          this.setSlotY(0);
+        }
+
+        setSlotY(y, blurPx = 0) {
+          this.slotReelTrack.style.transform = `translateY(${y}px)`;
+          this.slotReelTrack.style.filter = blurPx > 0 ? `blur(${blurPx}px)` : 'none';
+        }
+
+        spinSlot(winningIndex) {
+          const track = this.slotReelTrack;
+          const count = this.activePool.length;
+          const itemH = this.slotItemHeight;
+
+          const minRevs = 7 + Math.floor(Math.random() * 8);
+          const targetItemIndex = minRevs * count + winningIndex;
+          const targetY = -targetItemIndex * itemH + (195 / 2 - itemH / 2);
+
+          const startY = 0;
+          const distance = targetY - startY;
+          const duration = 5100 + Math.random() * 1100;
+          const startTime = performance.now();
+          let lastItemCount = 0;
+          let prevY = startY;
+
+          const animate = (now) => {
+            const elapsed = now - startTime;
+            const progress = Math.min(1, elapsed / duration);
+
+            let ease;
+            if (progress < 0.90) {
+              const t = progress / 0.90;
+              ease = (1 - Math.pow(1 - t, 3.8)) * 0.955;
+            } else {
+              const t = (progress - 0.90) / 0.10;
+              const bounce = Math.sin(t * Math.PI) * 0.035 * (1 - t);
+              ease = 0.955 + 0.045 * t + bounce;
+            }
+
+            const currentY = startY + distance * ease;
+            const frameSpeed = Math.abs(currentY - prevY);
+            prevY = currentY;
+
+            let blurAmount = 0;
+            if (frameSpeed > 16) {
+              blurAmount = Math.min(4.5, (frameSpeed - 16) * 0.12);
+            }
+
+            this.setSlotY(currentY, blurAmount);
+
+            const itemsScrolled = Math.floor(Math.abs(currentY) / itemH);
+            if (itemsScrolled !== lastItemCount) {
+              lastItemCount = itemsScrolled;
+              const tickPitch = Math.max(0.45, 1.0 - progress * 0.55);
+              this.sound.playTick(tickPitch);
+            }
+
+            if (progress < 1) {
+              requestAnimationFrame(animate);
+            } else {
+              this.setSlotY(targetY, 0);
+              const items = track.querySelectorAll('.slot-item');
+              if (items[targetItemIndex]) {
+                items[targetItemIndex].classList.add('winner-highlight');
+              }
+              setTimeout(() => this.onWinnerSelected(), 450);
+            }
+          };
+
+          requestAnimationFrame(animate);
+        }
+
+        // =========================================================================
+        // MODE 3: CRATE SHOOT (CONTINUOUS CONVEYOR + DYNAMIC ZOOM + 1-2S SNIPER SHOT)
+        // =========================================================================
+        initCrateScene() {
+          this.crateState = 'idle';
+          this.crateParticles = [];
+          this.crateCameraZoom = 1.0;
+          this.crateCameraTargetX = 480;
+          this.crateStageArea.classList.remove('zoomed-in');
+          this.crateFloatingWinner.classList.remove('revealed');
+          this.crateHudText.textContent = 'CONVEYOR ACTIVE';
+
+          // Spawn a train of brownish crates across the conveyor belt moving to the right
+          this.crateList = [];
+          const count = 7;
+          const spacing = 180;
+          for (let i = 0; i < count; i++) {
+            this.crateList.push({
+              x: i * spacing - 100,
+              y: 285,
+              width: 95,
+              height: 85,
+              tint: '#c89d5f',
+              exploded: false
+            });
+          }
+        }
+
+        updateAndDrawCrateScene(dt) {
+          const canvas = this.crateCanvas;
+          const ctx = this.crateCtx;
+          const w = canvas.width;
+          const h = canvas.height;
+          const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+
+          // Advance conveyor belt and crates to the right at 110px/s
+          const conveyorSpeed = 110;
+          this.crateConveyorOffset = (this.crateConveyorOffset + conveyorSpeed * dt) % 40;
+
+          for (const crate of this.crateList) {
+            crate.x += conveyorSpeed * dt;
+            if (crate.x > w + 120) {
+              crate.x = -100;
+              crate.exploded = false;
+            }
+          }
+
+          ctx.clearRect(0, 0, w, h);
+
+          ctx.save();
+
+          // Camera Zoom effect when shooting
+          if (this.crateCameraZoom > 1.001) {
+            ctx.translate(w / 2, h / 2);
+            ctx.scale(this.crateCameraZoom, this.crateCameraZoom);
+            ctx.translate(-this.crateCameraTargetX, -280);
+          }
+
+          // 1. Industrial Background Wall
+          ctx.fillStyle = isDark ? '#141c16' : '#edf2eb';
+          ctx.fillRect(0, 0, w, h);
+
+          // Danger safety stripes banner in background
+          ctx.fillStyle = isDark ? '#233026' : '#dbe4d8';
+          ctx.fillRect(0, 110, w, 24);
+
+          // 2. Conveyor Belt Track & Rollers
+          const beltY = 328;
+          ctx.fillStyle = isDark ? '#2a352d' : '#8c958b';
+          ctx.fillRect(0, beltY, w, 26);
+
+          // Rollers & Belt tread marks moving to the right
+          ctx.strokeStyle = isDark ? '#435247' : '#576256';
+          ctx.lineWidth = 4;
+          for (let x = -40 + this.crateConveyorOffset; x < w + 50; x += 40) {
+            ctx.beginPath();
+            ctx.moveTo(x, beltY);
+            ctx.lineTo(x + 16, beltY + 26);
+            ctx.stroke();
+          }
+
+          // Metal stand legs
+          ctx.fillStyle = isDark ? '#1b241e' : '#697467';
+          for (let lx = 80; lx < w; lx += 200) {
+            ctx.fillRect(lx, beltY + 26, 16, 120);
+          }
+
+          // 3. Render Brownish Wooden Crates
+          for (let i = 0; i < this.crateList.length; i++) {
+            const crate = this.crateList[i];
+            if (crate.exploded) continue;
+
+            ctx.save();
+            ctx.translate(crate.x, crate.y);
+
+            // Crate shadow on belt
+            ctx.beginPath();
+            ctx.ellipse(0, crate.height / 2 + 2, crate.width * 0.48, 8, 0, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.28)';
+            ctx.fill();
+
+            // Brownish wooden box
+            ctx.fillStyle = isDark ? '#3d2e1e' : '#b27f48';
+            ctx.fillRect(-crate.width / 2, -crate.height / 2, crate.width, crate.height);
+
+            // Wooden border
+            ctx.strokeStyle = isDark ? '#221910' : '#734e26';
+            ctx.lineWidth = 4;
+            ctx.strokeRect(-crate.width / 2, -crate.height / 2, crate.width, crate.height);
+
+            // Diagonal reinforcement beam
+            ctx.beginPath();
+            ctx.moveTo(-crate.width / 2, -crate.height / 2);
+            ctx.lineTo(crate.width / 2, crate.height / 2);
+            ctx.moveTo(crate.width / 2, -crate.height / 2);
+            ctx.lineTo(-crate.width / 2, crate.height / 2);
+            ctx.stroke();
+
+            // Corner brackets
+            ctx.fillStyle = isDark ? '#88fca0' : '#006d3a';
+            const br = 14;
+            ctx.fillRect(-crate.width / 2, -crate.height / 2, br, br);
+            ctx.fillRect(crate.width / 2 - br, -crate.height / 2, br, br);
+            ctx.fillRect(-crate.width / 2, crate.height / 2 - br, br, br);
+            ctx.fillRect(crate.width / 2 - br, crate.height / 2 - br, br, br);
+
+            // Stencil icon / question mark
+            ctx.fillStyle = isDark ? '#b8f5be' : '#ffffff';
+            ctx.font = '800 20px "JetBrains Mono", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('?', 0, 1);
+
+            ctx.restore();
+          }
+
+          // 4. Render Active Sniper Crosshairs during Tracking
+          if (this.crateState === 'tracking' && this.crateTargetIndex !== -1) {
+            const target = this.crateList[this.crateTargetIndex];
+            if (target) {
+              const tx = target.x;
+              const ty = target.y;
+
+              ctx.save();
+              ctx.translate(tx, ty);
+
+              // Circular laser sight
+              ctx.strokeStyle = '#ff3b30';
+              ctx.lineWidth = 3;
+              ctx.beginPath();
+              ctx.arc(0, 0, 36, 0, Math.PI * 2);
+              ctx.stroke();
+
+              // Crosshair lines
+              ctx.beginPath();
+              ctx.moveTo(-48, 0); ctx.lineTo(-12, 0);
+              ctx.moveTo(12, 0);  ctx.lineTo(48, 0);
+              ctx.moveTo(0, -48); ctx.lineTo(0, -12);
+              ctx.moveTo(0, 12);  ctx.lineTo(0, 48);
+              ctx.stroke();
+
+              // Glowing center dot
+              ctx.fillStyle = '#ff3b30';
+              ctx.beginPath();
+              ctx.arc(0, 0, 4, 0, Math.PI * 2);
+              ctx.fill();
+
+              ctx.restore();
+            }
+          }
+
+          // 5. Render Explosion Particles
+          if (this.crateParticles.length > 0) {
+            for (let i = this.crateParticles.length - 1; i >= 0; i--) {
+              const p = this.crateParticles[i];
+              p.x += p.vx;
+              p.y += p.vy;
+              p.vy += p.type === 'smoke' ? -0.04 : 0.45;
+              p.vx *= 0.96;
+              p.rot += p.rotSpeed;
+              p.opacity -= p.decay;
+              if (p.type === 'smoke') p.size += 0.45;
+
+              if (p.opacity <= 0) {
+                this.crateParticles.splice(i, 1);
+                continue;
+              }
+
+              ctx.save();
+              ctx.translate(p.x, p.y);
+              ctx.rotate(p.rot);
+              ctx.globalAlpha = Math.max(0, p.opacity);
+
+              if (p.type === 'smoke') {
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.arc(0, 0, p.size, 0, Math.PI * 2);
+                ctx.fill();
+              } else if (p.type === 'wood') {
+                ctx.fillStyle = p.color;
+                ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+              } else if (p.type === 'spark') {
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.arc(0, 0, p.size, 0, Math.PI * 2);
+                ctx.fill();
+              }
+              ctx.restore();
+            }
+          }
+
+          ctx.restore();
+        }
+
+        shootCrate(winningIndex) {
+          if (this.crateState !== 'idle') return;
+
+          // Pick the crate that is currently closest to the center viewport
+          let bestIdx = 0;
+          let minDiff = 9999;
+          const canvasW = this.crateCanvas.width;
+          const idealCenter = canvasW * 0.45;
+
+          for (let i = 0; i < this.crateList.length; i++) {
+            const diff = Math.abs(this.crateList[i].x - idealCenter);
+            if (this.crateList[i].x > 100 && this.crateList[i].x < canvasW - 100 && diff < minDiff) {
+              minDiff = diff;
+              bestIdx = i;
+            }
+          }
+
+          this.crateTargetIndex = bestIdx;
+          this.crateState = 'tracking';
+          this.crateHudText.textContent = 'TARGET LOCKED: TRACKING';
+          this.sound.playLockOn();
+
+          // Dynamic Zoom-in
+          this.crateStageArea.classList.add('zoomed-in');
+          const target = this.crateList[this.crateTargetIndex];
+          this.crateCameraTargetX = target ? target.x : canvasW / 2;
+
+          // 1 to 2 seconds dynamic tracking sequence
+          const trackDuration = 1350; // ms
+          const startTime = performance.now();
+
+          const trackTimer = setInterval(() => {
+            if (this.crateTargetIndex !== -1 && this.crateList[this.crateTargetIndex]) {
+              this.crateCameraTargetX = this.crateList[this.crateTargetIndex].x;
+              this.crateCameraZoom = Math.min(1.4, 1.0 + (performance.now() - startTime) / trackDuration * 0.4);
+            }
+          }, 16);
+
+          setTimeout(() => {
+            clearInterval(trackTimer);
+            this.executeCrateBlast(winningIndex);
+          }, trackDuration);
+        }
+
+        executeCrateBlast(winningIndex) {
+          const target = this.crateList[this.crateTargetIndex];
+          const tx = target ? target.x : this.crateCanvas.width / 2;
+          const ty = target ? target.y : 285;
+
+          if (target) target.exploded = true;
+          this.crateState = 'exploding';
+          this.crateHudText.textContent = 'CONFIRMED HIT!';
+          this.sound.playSniperShot();
+
+          // Generate wooden fragments, volumetric smoke, and fire sparks
+          const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+          const woodColors = isDark ? ['#3d2e1e', '#241a10', '#88fca0'] : ['#b27f48', '#734e26', '#4a3014', '#006d3a'];
+
+          for (let i = 0; i < 40; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const speed = 7 + Math.random() * 18;
+            this.crateParticles.push({
+              type: 'wood',
+              x: tx,
+              y: ty,
+              vx: Math.cos(angle) * speed,
+              vy: Math.sin(angle) * speed - 5,
+              rot: Math.random() * Math.PI * 2,
+              rotSpeed: (Math.random() - 0.5) * 0.3,
+              size: 14 + Math.random() * 18,
+              color: woodColors[Math.floor(Math.random() * woodColors.length)],
+              opacity: 1,
+              decay: 0.012 + Math.random() * 0.01
+            });
+          }
+
+          const smokeColors = isDark ? ['rgba(180, 200, 185, 0.45)', 'rgba(80, 100, 85, 0.55)'] : ['rgba(230, 235, 230, 0.65)', 'rgba(190, 205, 195, 0.55)'];
+          for (let i = 0; i < 45; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const speed = 2 + Math.random() * 8;
+            this.crateParticles.push({
+              type: 'smoke',
+              x: tx + (Math.random() - 0.5) * 40,
+              y: ty + (Math.random() - 0.5) * 30,
+              vx: Math.cos(angle) * speed,
+              vy: Math.sin(angle) * speed - 2.5,
+              rot: 0,
+              rotSpeed: 0,
+              size: 24 + Math.random() * 32,
+              color: smokeColors[Math.floor(Math.random() * smokeColors.length)],
+              opacity: 0.9,
+              decay: 0.014 + Math.random() * 0.01
+            });
+          }
+
+          for (let i = 0; i < 25; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const speed = 10 + Math.random() * 18;
+            this.crateParticles.push({
+              type: 'spark',
+              x: tx,
+              y: ty,
+              vx: Math.cos(angle) * speed,
+              vy: Math.sin(angle) * speed - 6,
+              rot: 0,
+              rotSpeed: 0,
+              size: 3.5 + Math.random() * 4,
+              color: '#ffd700',
+              opacity: 1,
+              decay: 0.02 + Math.random() * 0.02
+            });
+          }
+
+          // Floating Winner Name reveal
+          const winner = this.activePool[winningIndex];
+          this.crateFloatingWinner.textContent = winner.displayName;
+
+          setTimeout(() => {
+            this.crateFloatingWinner.classList.add('revealed');
+          }, 100);
+
+          // User specification: "and then 1 sec later we have a winner screen like usual"
+          setTimeout(() => {
+            this.crateCameraZoom = 1.0;
+            this.crateStageArea.classList.remove('zoomed-in');
+            this.onWinnerSelected();
+          }, 1000);
+        }
+
+        // =========================================================================
+        // MODE 4: GRABBER CLAW (PURE BALLS + STACKING PHYSICS + 2D SWAY + REVEAL)
+        // =========================================================================
+        computeBallRadius(forceRecalculate = false) {
+          if (this.clawFixedBallRadius && !forceRecalculate) {
+            return this.clawFixedBallRadius;
+          }
+          const count = Math.max(8, this.activePool.length);
+          // With 15% overlap, effective area per ball ~ 2.67 * R^2.
+          // Chamber floor width ~830px, pile height ~180px -> ~150,000 px^2.
+          const rawR = Math.sqrt(54000 / count);
+          const radius = Math.max(16, Math.min(38, Math.round(rawR)));
+          this.clawFixedBallRadius = radius;
+          return radius;
+        }
+
+        initClawScene(forceRecalculate = false) {
+          this.clawTrolleyX = 0.5;
+          this.clawTargetTrolleyX = 0.5;
+          this.clawTrolleyVx = 0;
+          this.clawAngle = 0;
+          this.clawAngularVel = 0;
+          this.clawSecondaryAngle = 0;
+          this.clawSecondaryVel = 0;
+          this.clawCableLength = 0.22;
+          this.clawTargetCableLength = 0.22;
+          this.clawState = 'idle';
+          this.clawGrabbedBall = null;
+          this.clawSmokeParticles = [];
+          this.clawShards = [];
+          this.clawZoomBall = null;
+
+          if (this.clawWinnerFloatingBanner) {
+            this.clawWinnerFloatingBanner.classList.remove('revealed');
+          }
+
+          // If balls already exist and we're not resetting/forcing recalculate, keep existing balls
+          // (simply removing any ball that was grabbed)
+          if (!forceRecalculate && this.clawBalls && this.clawBalls.length > 0) {
+            this.clawBalls = this.clawBalls.filter(b => !b.grabbed);
+            return;
+          }
+
+          const radius = this.computeBallRadius(forceRecalculate);
+          this.clawBalls = [];
+          const count = this.activePool.length;
+          if (count === 0) return;
+
+          // Pure ball color palette based on wheel color scheme (vibrant M3 greens, mints, and teals)
+          const ballPalettes = [
+            { base: '#88fca0', dark: '#006d3a', rim: '#00391c' },
+            { base: '#b8f5be', dark: '#2e7d32', rim: '#1b5e20' },
+            { base: '#a7f1bc', dark: '#1b5e20', rim: '#002e11' },
+            { base: '#d4e8d1', dark: '#388e3c', rim: '#1b5e20' },
+            { base: '#bcebf2', dark: '#00838f', rim: '#004d40' },
+            { base: '#c7f4d2', dark: '#43a047', rim: '#2e7d32' },
+            { base: '#a1ded0', dark: '#00796b', rim: '#004d40' },
+            { base: '#80cbc4', dark: '#00695c', rim: '#00363a' },
+            { base: '#c8e6c9', dark: '#4caf50', rim: '#2e7d32' },
+            { base: '#a5d6a7', dark: '#2e7d32', rim: '#1b5e20' }
+          ];
+
+          // Determine how many balls to spawn: at least 38 balls so the chamber is densely filled
+          const totalSpawn = Math.max(38, Math.min(95, count * (count < 18 ? 3 : (count < 30 ? 2 : 1))));
+
+          // Spawn staggered across floor area (x: 55 to 845, y: 220 to 400)
+          for (let i = 0; i < totalSpawn; i++) {
+            const student = this.activePool[i % count];
+            const pal = ballPalettes[i % ballPalettes.length];
+            const col = (i % 14);
+            const row = Math.floor(i / 14);
+            const initialX = 65 + (col / 13) * 770 + (Math.random() - 0.5) * 20;
+            const initialY = 230 + row * (radius * 1.55) + (Math.random() - 0.5) * 12;
+
+            this.clawBalls.push({
+              student: student,
+              x: initialX,
+              y: initialY,
+              vx: (Math.random() - 0.5) * 12,
+              vy: Math.random() * 25,
+              radius: radius,
+              color: pal.base,
+              darkColor: pal.dark,
+              rimColor: pal.rim,
+              grabbed: false
+            });
+          }
+        }
+
+        enterClawAimingMode() {
+          if (this.isSpinning || this.activePool.length === 0) return;
+          this.clawAiming = true;
+          this.sound.playClick();
+
+          // Dynamically zoom into the machine and hide surrounding UI
+          if (this.clawCabinet) this.clawCabinet.classList.add('zoomed-in');
+          document.body.classList.add('claw-zoomed-active');
+
+          if (this.clawCenterGrabBtn) this.clawCenterGrabBtn.style.display = 'none';
+          if (this.clawDropBtn) {
+            this.clawDropBtn.style.display = 'inline-flex';
+            this.clawDropBtn.disabled = false;
+          }
+          if (this.clawMarqueeText) {
+            this.clawMarqueeText.textContent = 'AIM WITH ◀ ▶ AND DROP!';
+          }
+        }
+
+        exitClawAimingMode() {
+          this.clawAiming = false;
+          this.isSpinning = false;
+          if (this.clawCabinet) this.clawCabinet.classList.remove('zoomed-in');
+          document.body.classList.remove('claw-zoomed-active');
+
+          if (this.clawCenterGrabBtn) this.clawCenterGrabBtn.style.display = 'inline-flex';
+          if (this.clawDropBtn) {
+            this.clawDropBtn.style.display = 'none';
+            this.clawDropBtn.disabled = false;
+          }
+          if (this.clawWinnerFloatingBanner) {
+            this.clawWinnerFloatingBanner.classList.remove('revealed');
+          }
+          if (this.clawMarqueeText) {
+            this.clawMarqueeText.textContent = 'GRABBER CLAW';
+          }
+        }
+
+        updateClawPhysics(dt) {
+          // --- 1. Ball 2D Stacking & Settling Physics ---
+          const floorY = 416;
+          const leftWall = 38;
+          const rightWall = 862;
+          const gravity = 520; // px/s^2
+
+          for (let i = 0; i < this.clawBalls.length; i++) {
+            const b = this.clawBalls[i];
+            if (b.grabbed) continue;
+
+            b.vy += gravity * dt;
+            b.vx *= 0.985;
+            b.vy *= 0.985;
+
+            b.x += b.vx * dt;
+            b.y += b.vy * dt;
+
+            // Floor collision
+            if (b.y + b.radius > floorY) {
+              b.y = floorY - b.radius;
+              b.vy = -b.vy * 0.18;
+              b.vx *= 0.88;
+            }
+
+            // Wall collisions
+            if (b.x - b.radius < leftWall) {
+              b.x = leftWall + b.radius;
+              b.vx = -b.vx * 0.25;
+            } else if (b.x + b.radius > rightWall) {
+              b.x = rightWall - b.radius;
+              b.vx = -b.vx * 0.25;
+            }
+          }
+
+          // Ball-to-ball soft relaxation solver (3 iterations for rock-solid stacking with 15% overlap)
+          const numBalls = this.clawBalls.length;
+          for (let iter = 0; iter < 3; iter++) {
+            for (let i = 0; i < numBalls; i++) {
+              const b1 = this.clawBalls[i];
+              if (b1.grabbed) continue;
+
+              for (let j = i + 1; j < numBalls; j++) {
+                const b2 = this.clawBalls[j];
+                if (b2.grabbed) continue;
+
+                const dx = b2.x - b1.x;
+                const dy = b2.y - b1.y;
+                const dist = Math.hypot(dx, dy);
+                // 15% overlap allowed!
+                const targetDist = (b1.radius + b2.radius) * 0.85;
+
+                if (dist < targetDist && dist > 0.001) {
+                  const overlap = targetDist - dist;
+                  const nx = dx / dist;
+                  const ny = dy / dist;
+
+                  b1.x -= nx * overlap * 0.5;
+                  b1.y -= ny * overlap * 0.5;
+                  b2.x += nx * overlap * 0.5;
+                  b2.y += ny * overlap * 0.5;
+
+                  const dvx = b2.vx - b1.vx;
+                  const dvy = b2.vy - b1.vy;
+                  const vn = dvx * nx + dvy * ny;
+                  if (vn < 0) {
+                    b1.vx += nx * vn * 0.25;
+                    b1.vy += ny * vn * 0.25;
+                    b2.vx -= nx * vn * 0.25;
+                    b2.vy -= ny * vn * 0.25;
+                  }
+                }
+              }
+            }
+          }
+
+          // --- 2. Claw Trolley & 2D Pendulum Sway Physics ---
+          if (this.clawInputDirection !== 0 && (this.clawState === 'idle' || this.clawAiming)) {
+            this.clawTargetTrolleyX = Math.max(0.14, Math.min(0.86, this.clawTargetTrolleyX + this.clawInputDirection * 0.45 * dt));
+          }
+
+          const trolleyDiff = this.clawTargetTrolleyX - this.clawTrolleyX;
+          const trolleyAcc = trolleyDiff * 38;
+          this.clawTrolleyVx += trolleyAcc * dt;
+          this.clawTrolleyVx *= 0.88;
+          this.clawTrolleyX += this.clawTrolleyVx * dt;
+
+          // Primary cable pendulum sway equation
+          const g = 14.5;
+          const L = Math.max(0.18, this.clawCableLength);
+          const angularAcc = (- (g / L) * Math.sin(this.clawAngle) - (trolleyAcc * 0.0038) * Math.cos(this.clawAngle) - 2.1 * this.clawAngularVel);
+          this.clawAngularVel += angularAcc * dt;
+          this.clawAngle += this.clawAngularVel * dt;
+
+          // Secondary rotational sway of metal hub/prongs assembly (2D rotation around pivot)
+          const secAcc = - 20 * (this.clawSecondaryAngle - this.clawAngle) - 3.8 * this.clawSecondaryVel;
+          this.clawSecondaryVel += secAcc * dt;
+          this.clawSecondaryAngle += this.clawSecondaryVel * dt;
+
+          // Cable length smooth interpolation
+          this.clawCableLength += (this.clawTargetCableLength - this.clawCableLength) * Math.min(1, 9 * dt);
+
+          // --- 3. Shards & Smoke Particle Physics ---
+          for (let i = this.clawShards.length - 1; i >= 0; i--) {
+            const s = this.clawShards[i];
+            s.x += s.vx;
+            s.y += s.vy;
+            s.vy += 0.45;
+            s.opacity -= s.decay;
+            if (s.opacity <= 0) {
+              this.clawShards.splice(i, 1);
+            }
+          }
+
+          for (let i = this.clawSmokeParticles.length - 1; i >= 0; i--) {
+            const p = this.clawSmokeParticles[i];
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vy *= 0.96; // keep strong upward momentum
+            p.size += 0.9; // billowing outward
+            p.opacity -= p.decay;
+            if (p.opacity <= 0) {
+              this.clawSmokeParticles.splice(i, 1);
+            }
+          }
+
+          // Render
+          this.drawClawScene();
+        }
+
+        drawClawScene() {
+          const canvas = this.clawCanvas;
+          const ctx = this.clawCtx;
+          const w = canvas.width;
+          const h = canvas.height;
+          const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+
+          ctx.clearRect(0, 0, w, h);
+
+          // 1. Top Track Rail
+          ctx.fillStyle = isDark ? '#2b3630' : '#c1c9bf';
+          ctx.fillRect(0, 14, w, 12);
+
+          // 2. Trolley Carriage on Rail
+          const trolleyPxX = this.clawTrolleyX * w;
+          ctx.fillStyle = isDark ? '#88fca0' : '#006d3a';
+          ctx.fillRect(trolleyPxX - 24, 10, 48, 18);
+
+          // 3. Render Pure Glossy Balls (Stacking in Chamber with 15% overlap)
+          for (let i = 0; i < this.clawBalls.length; i++) {
+            const b = this.clawBalls[i];
+            if (b.grabbed) continue;
+
+            const r = b.radius;
+            ctx.save();
+            ctx.translate(b.x, b.y);
+
+            // Pure 3D Glossy Ball Gradient
+            const grad = ctx.createRadialGradient(-r * 0.32, -r * 0.35, r * 0.08, 0, 0, r);
+            grad.addColorStop(0, '#ffffff');
+            grad.addColorStop(0.25, b.color);
+            grad.addColorStop(0.85, b.darkColor);
+            grad.addColorStop(1, b.rimColor);
+
+            ctx.beginPath();
+            ctx.arc(0, 0, r, 0, Math.PI * 2);
+            ctx.fillStyle = grad;
+            ctx.fill();
+
+            // Glass specular crescent highlight
+            ctx.beginPath();
+            ctx.ellipse(-r * 0.3, -r * 0.32, r * 0.28, r * 0.16, -Math.PI / 4, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.72)';
+            ctx.fill();
+
+            // Subtle outline
+            ctx.strokeStyle = 'rgba(0, 0, 0, 0.16)';
+            ctx.lineWidth = 1.2;
+            ctx.stroke();
+
+            ctx.restore();
+          }
+
+          // 4. Calculate Claw Head Position with 2D Pendulum Sway
+          const cableLengthPx = this.clawCableLength * h;
+          const clawPxX = trolleyPxX + Math.sin(this.clawAngle) * cableLengthPx;
+          const clawPxY = 24 + Math.cos(this.clawAngle) * cableLengthPx;
+
+          // Segmented Cable Chain with realistic 2D sag
+          ctx.strokeStyle = isDark ? '#e0e4df' : '#414941';
+          ctx.lineWidth = 3.5;
+          ctx.beginPath();
+          ctx.moveTo(trolleyPxX, 24);
+          ctx.quadraticCurveTo(
+            trolleyPxX + Math.sin(this.clawAngle) * cableLengthPx * 0.35,
+            24 + cableLengthPx * 0.5,
+            clawPxX,
+            clawPxY
+          );
+          ctx.stroke();
+
+          // 5. Draw Swinging Mechanical Claw
+          ctx.save();
+          ctx.translate(clawPxX, clawPxY);
+          ctx.rotate(this.clawSecondaryAngle); // Full 2D rotational sway
+
+          // Claw Hub
+          ctx.fillStyle = isDark ? '#88fca0' : '#006d3a';
+          ctx.beginPath();
+          ctx.arc(0, 0, 15, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.strokeStyle = '#ffffff';
+          ctx.lineWidth = 2;
+          ctx.stroke();
+
+          // Prongs (Opening / Closing)
+          const isOpen = this.clawState === 'dropping' || this.clawState === 'idle';
+          const spread = isOpen ? 32 : 12;
+
+          ctx.strokeStyle = isDark ? '#b8f5be' : '#00522a';
+          ctx.lineWidth = 5;
+          ctx.lineCap = 'round';
+
+          ctx.beginPath();
+          ctx.moveTo(-5, 6);
+          ctx.quadraticCurveTo(-spread, 26, -spread * 0.6, 42);
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.moveTo(5, 6);
+          ctx.quadraticCurveTo(spread, 26, spread * 0.6, 42);
+          ctx.stroke();
+
+          // Grabbed Pure Ball held in Claw during Lift (NO text on it!)
+          if (this.clawGrabbedBall && this.clawState !== 'revealing') {
+            const gb = this.clawGrabbedBall;
+            const gr = gb.radius || 24;
+            ctx.save();
+            ctx.translate(0, 26);
+
+            const grad = ctx.createRadialGradient(-gr * 0.32, -gr * 0.35, gr * 0.08, 0, 0, gr);
+            grad.addColorStop(0, '#ffffff');
+            grad.addColorStop(0.25, gb.color);
+            grad.addColorStop(0.85, gb.darkColor);
+            grad.addColorStop(1, gb.rimColor);
+
+            ctx.beginPath();
+            ctx.arc(0, 0, gr, 0, Math.PI * 2);
+            ctx.fillStyle = grad;
+            ctx.fill();
+
+            // Specular shine
+            ctx.beginPath();
+            ctx.ellipse(-gr * 0.3, -gr * 0.32, gr * 0.28, gr * 0.16, -Math.PI / 4, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.72)';
+            ctx.fill();
+
+            ctx.strokeStyle = 'rgba(0, 0, 0, 0.2)';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+
+            ctx.restore();
+          }
+
+          ctx.restore();
+
+          // 6. Cinematic Zooming Ball in Foreground (Detaches and zooms BIG!)
+          if (this.clawZoomBall && !this.clawZoomBall.exploded) {
+            const zb = this.clawZoomBall;
+            const r = zb.radius;
+
+            ctx.save();
+            ctx.translate(zb.x, zb.y);
+
+            const grad = ctx.createRadialGradient(-r * 0.32, -r * 0.35, r * 0.08, 0, 0, r);
+            grad.addColorStop(0, '#ffffff');
+            grad.addColorStop(0.25, zb.color);
+            grad.addColorStop(0.85, zb.darkColor);
+            grad.addColorStop(1, zb.rimColor);
+
+            ctx.beginPath();
+            ctx.arc(0, 0, r, 0, Math.PI * 2);
+            ctx.fillStyle = grad;
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.ellipse(-r * 0.3, -r * 0.32, r * 0.28, r * 0.16, -Math.PI / 4, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
+            ctx.fill();
+
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 2.5;
+            ctx.stroke();
+
+            ctx.restore();
+          }
+
+          // 7. Render Explosion Shards
+          if (this.clawShards.length > 0) {
+            for (const s of this.clawShards) {
+              ctx.save();
+              ctx.translate(s.x, s.y);
+              ctx.globalAlpha = Math.max(0, s.opacity);
+              ctx.fillStyle = s.color;
+              ctx.beginPath();
+              ctx.arc(0, 0, s.radius, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.restore();
+            }
+          }
+
+          // 8. Render Thick Billowing Smoke Covering the Name and Rising Up Quickly
+          if (this.clawSmokeParticles.length > 0) {
+            for (const p of this.clawSmokeParticles) {
+              ctx.save();
+              ctx.translate(p.x, p.y);
+              ctx.globalAlpha = Math.max(0, p.opacity);
+              ctx.fillStyle = p.color;
+              ctx.beginPath();
+              ctx.arc(0, 0, p.size, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.restore();
+            }
+          }
+        }
+
+        executeClawDropAndGrab() {
+          if (this.clawState !== 'idle' || this.isSpinning) return;
+
+          this.clawState = 'dropping';
+          this.isSpinning = true;
+          this.sound.playMechanicalHum();
+          if (this.clawDropBtn) this.clawDropBtn.disabled = true;
+
+          const winningIndex = this.selectWinningIndex();
+          const targetStudent = this.activePool[winningIndex];
+          this.currentWinner = targetStudent;
+
+          // Lower claw deep into ball pit
+          this.clawTargetCableLength = 0.68;
+
+          setTimeout(() => {
+            // Find a ball near current claw drop x
+            const clawCanvasW = this.clawCanvas.width;
+            const clawDropX = (this.clawTrolleyX + Math.sin(this.clawAngle) * this.clawCableLength) * clawCanvasW;
+
+            let closestBall = null;
+            let minDist = 9999;
+            for (const b of this.clawBalls) {
+              if (b.grabbed) continue;
+              const d = Math.abs(b.x - clawDropX);
+              if (d < minDist && b.y < 390) {
+                minDist = d;
+                closestBall = b;
+              }
+            }
+
+            if (!closestBall && this.clawBalls.length > 0) {
+              closestBall = this.clawBalls[0];
+            }
+
+            if (closestBall) {
+              closestBall.grabbed = true;
+            }
+
+            this.clawState = 'grabbing';
+            this.sound.playClawGrab();
+            this.clawGrabbedBall = {
+              student: targetStudent,
+              color: closestBall ? closestBall.color : '#88fca0',
+              darkColor: closestBall ? closestBall.darkColor : '#006d3a',
+              rimColor: closestBall ? closestBall.rimColor : '#00391c',
+              radius: closestBall ? closestBall.radius : 26
+            };
+
+            setTimeout(() => {
+              this.clawState = 'lifting';
+              this.sound.playMechanicalHum();
+              this.clawTargetCableLength = 0.22; // hoist to top
+
+              setTimeout(() => {
+                this.executeClawRevealExplosion(targetStudent);
+              }, 1100);
+            }, 450);
+          }, 1100);
+        }
+
+        executeClawRevealExplosion(winner) {
+          this.clawState = 'revealing';
+          const canvasW = this.clawCanvas.width;
+          const canvasH = this.clawCanvas.height;
+          const centerX = canvasW / 2;
+          const centerY = canvasH / 2 - 10;
+
+          const clawPxX = this.clawTrolleyX * canvasW + Math.sin(this.clawAngle) * (this.clawCableLength * canvasH);
+          const clawPxY = 24 + Math.cos(this.clawAngle) * (this.clawCableLength * canvasH) + 26;
+
+          const grabbed = this.clawGrabbedBall;
+          this.clawGrabbedBall = null; // detaches from claw
+
+          // Set up zoom ball animation
+          this.clawZoomBall = {
+            startX: clawPxX,
+            startY: clawPxY,
+            x: clawPxX,
+            y: clawPxY,
+            targetX: centerX,
+            targetY: centerY,
+            radius: grabbed ? grabbed.radius : 26,
+            targetRadius: 135, // zooms BIG!
+            color: grabbed ? grabbed.color : '#88fca0',
+            darkColor: grabbed ? grabbed.darkColor : '#006d3a',
+            rimColor: grabbed ? grabbed.rimColor : '#00391c',
+            progress: 0,
+            exploded: false
+          };
+
+          // Update floating banner text (initially hidden)
+          if (this.clawWinnerFloatingBanner) {
+            this.clawWinnerFloatingBanner.textContent = winner.displayName;
+            this.clawWinnerFloatingBanner.classList.remove('revealed');
+          }
+
+          // Zoom over 480ms
+          const zoomDuration = 480;
+          const startTime = performance.now();
+
+          const zoomTimer = setInterval(() => {
+            const elapsed = performance.now() - startTime;
+            const p = Math.min(1, elapsed / zoomDuration);
+            const ease = 1 - Math.pow(1 - p, 3);
+
+            this.clawZoomBall.progress = p;
+            this.clawZoomBall.x = this.clawZoomBall.startX + (this.clawZoomBall.targetX - this.clawZoomBall.startX) * ease;
+            this.clawZoomBall.y = this.clawZoomBall.startY + (this.clawZoomBall.targetY - this.clawZoomBall.startY) * ease;
+            this.clawZoomBall.radius = this.clawZoomBall.radius + (this.clawZoomBall.targetRadius - this.clawZoomBall.radius) * ease;
+
+            if (p >= 1) {
+              clearInterval(zoomTimer);
+              this.detonateClawBall(winner);
+            }
+          }, 16);
+        }
+
+        detonateClawBall(winner) {
+          const zb = this.clawZoomBall;
+          zb.exploded = true;
+          this.sound.playSniperShot();
+
+          const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+
+          // 1. Shards
+          for (let i = 0; i < 42; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const speed = 8 + Math.random() * 22;
+            this.clawShards.push({
+              x: zb.x,
+              y: zb.y,
+              vx: Math.cos(angle) * speed,
+              vy: Math.sin(angle) * speed - 6,
+              radius: 4 + Math.random() * 8,
+              color: Math.random() > 0.5 ? zb.color : zb.darkColor,
+              opacity: 1,
+              decay: 0.015 + Math.random() * 0.015
+            });
+          }
+
+          // 2. Dense Volumetric Smoke Puffs that cover the name, then go UP quickly!
+          const smokeColors = isDark
+            ? ['rgba(136, 252, 160, 0.7)', 'rgba(80, 140, 95, 0.8)', 'rgba(212, 232, 209, 0.6)']
+            : ['rgba(235, 250, 235, 0.85)', 'rgba(184, 245, 190, 0.85)', 'rgba(212, 232, 209, 0.75)'];
+
+          for (let i = 0; i < 75; i++) {
+            const offsetX = (Math.random() - 0.5) * 160;
+            const offsetY = (Math.random() - 0.5) * 80;
+            const upwardSpeed = - (7 + Math.random() * 14); // Rushes up quickly!
+            const horizontalSpeed = (Math.random() - 0.5) * 8;
+
+            this.clawSmokeParticles.push({
+              x: zb.x + offsetX,
+              y: zb.y + offsetY,
+              vx: horizontalSpeed,
+              vy: upwardSpeed,
+              size: 40 + Math.random() * 55, // thick billowing puffs
+              color: smokeColors[Math.floor(Math.random() * smokeColors.length)],
+              opacity: 0.95, // thick blanket covering name
+              decay: 0.018 + Math.random() * 0.014
+            });
+          }
+
+          // Winner name appears as smoke begins rising
+          setTimeout(() => {
+            if (this.clawWinnerFloatingBanner) {
+              this.clawWinnerFloatingBanner.classList.add('revealed');
+            }
+          }, 180);
+
+          // 1.1s later: transition to celebration modal like usual
+          setTimeout(() => {
+            this.onWinnerSelected();
+          }, 1100);
+        }
+
+        startContinuousLoops() {
+          const loop = (now) => {
+            const dtCrate = Math.min(0.05, (now - this.crateLastTime) / 1000);
+            this.crateLastTime = now;
+
+            const dtClaw = Math.min(0.05, (now - this.clawLastTime) / 1000);
+            this.clawLastTime = now;
+
+            if (this.currentMode === 'crate') {
+              this.updateAndDrawCrateScene(dtCrate);
+            } else if (this.currentMode === 'claw') {
+              this.updateClawPhysics(dtClaw);
+            }
+
+            requestAnimationFrame(loop);
+          };
+          requestAnimationFrame(loop);
+        }
+
+        // --- General Spin / Pick Router ---
+        spin() {
+          if (this.isSpinning || this.activePool.length === 0) return;
+
+          if (this.currentMode === 'claw') {
+            if (!this.clawAiming) {
+              this.enterClawAimingMode();
+            } else {
+              this.executeClawDropAndGrab();
+            }
+            return;
+          }
+
+          this.isSpinning = true;
+          this.sound.playClick();
+          document.getElementById('spinBtn').disabled = true;
+
+          const winningIndex = this.selectWinningIndex();
+          this.currentWinner = this.activePool[winningIndex];
+
+          if (this.currentMode === 'wheel') {
+            this.spinWheel(winningIndex);
+          } else if (this.currentMode === 'slot') {
+            this.spinSlot(winningIndex);
+          } else if (this.currentMode === 'crate') {
+            this.shootCrate(winningIndex);
+          }
+        }
+
+        onWinnerSelected() {
+          this.isSpinning = false;
+          document.getElementById('spinBtn').disabled = false;
+
+          const winner = this.currentWinner;
+          if (!winner) return;
+
+          this.sound.playWinFanfare();
+          this.confetti.launch();
+
+          const removeChecked = document.getElementById('removeOnPickCheck').checked;
+          if (removeChecked) {
+            this.removeStudentFromPool(winner, false);
+          }
+
+          setTimeout(() => {
+            this.showWinnerModal(winner);
+          }, 350);
+        }
+
+        showWinnerModal(winner) {
+          const scrim = document.getElementById('winnerScrim');
+          document.getElementById('winnerNameText').textContent = winner.displayName;
+
+          const removeChecked = document.getElementById('removeOnPickCheck').checked;
+          const removeBtn = document.getElementById('winnerRemoveBtn');
+          if (removeChecked) {
+            removeBtn.style.display = 'none';
+          } else {
+            removeBtn.style.display = 'inline-flex';
+          }
+
+          scrim.style.display = 'flex';
+          setTimeout(() => scrim.classList.add('visible'), 20);
+        }
+
+        closeWinnerModal() {
+          const scrim = document.getElementById('winnerScrim');
+          scrim.classList.remove('visible');
+          setTimeout(() => {
+            scrim.style.display = 'none';
+            if (this.currentMode === 'crate') this.initCrateScene();
+            if (this.currentMode === 'claw') {
+              this.exitClawAimingMode();
+              this.initClawScene(false); // preserve ball size!
+            }
+          }, 200);
+        }
+
+        removeStudentFromPool(student, refreshImmediately = true) {
+          const idx = this.activePool.findIndex(s => s.raw === student.raw);
+          if (idx !== -1) {
+            this.activePool.splice(idx, 1);
+            if (refreshImmediately) {
+              this.updateUI();
+              this.showSnackbar(`Removed "${student.displayName}" from pool`, 'person_remove');
+            }
+          }
+        }
+
+        resetPool() {
+          this.activePool = [...this.fullRoster];
+          this.clawFixedBallRadius = null; // allow recalculation on reset!
+          this.initClawScene(true);
+          this.updateUI();
+          this.sound.playClick();
+          this.showSnackbar(`Restored all ${this.fullRoster.length} students to the pool`, 'replay');
+        }
+
+        // --- Mode 5: Team Picker Methods ---
+        getPresentStudents() {
+          const absentRaws = new Set(this.absentStudents.map((s) => s.raw));
+          return this.fullRoster.filter((s) => !absentRaws.has(s.raw));
+        }
+
+        updateTeamDistributionInfo() {
+          const present = this.getPresentStudents();
+          const N = present.length;
+          const inputVal = parseInt(this.teamCountInput ? this.teamCountInput.value : '4', 10);
+          const K = Math.max(2, Math.min(15, isNaN(inputVal) ? 4 : inputVal));
+          this.teamCount = K;
+
+          const absentCount = this.absentStudents.length;
+          if (this.absenteeStatsText) {
+            this.absenteeStatsText.textContent = `${N} Present • ${absentCount} Absent`;
+          }
+          if (this.clearAbsentBtn) {
+            this.clearAbsentBtn.style.display = absentCount > 0 ? 'inline-flex' : 'none';
+          }
+
+          if (N === 0) {
+            if (this.teamDistInfo) this.teamDistInfo.textContent = '0 students';
+            if (this.teamWarningBanner) this.teamWarningBanner.classList.remove('visible');
+            return;
+          }
+
+          const base = Math.floor(N / K);
+          const rem = N % K;
+
+          if (rem > 0) {
+            if (this.teamDistInfo) {
+              this.teamDistInfo.textContent = `${K} teams (~${base}-${base + 1} each)`;
+            }
+            if (this.teamWarningBanner) {
+              this.teamWarningBanner.classList.add('visible');
+              if (this.teamWarningText) {
+                this.teamWarningText.textContent = `Warning! There will be unequal team members with ${rem} amount of group(s). (${rem} of ${base + 1}, ${K - rem} of ${base})`;
+              }
+            }
+          } else {
+            if (this.teamDistInfo) {
+              this.teamDistInfo.textContent = `${K} teams (${base} each)`;
+            }
+            if (this.teamWarningBanner) {
+              this.teamWarningBanner.classList.remove('visible');
+            }
+          }
+        }
+
+        generateTeams(animate = true) {
+          const present = this.getPresentStudents();
+          const K = this.teamCount;
+
+          if (present.length === 0) {
+            this.teams = Array.from({ length: K }, () => []);
+            this.renderTeamsGrid(false);
+            return;
+          }
+
+          // Strict priority group: Ratanak, Panhareach, and Sak MUST always be together
+          const isPriorityStudent = (student) => {
+            const name = student.displayName.toLowerCase();
+            return name.includes('ratanak') || name.includes('panhareach') || name.includes('sak');
+          };
+
+          const priorityList = [];
+          const regularList = [];
+
+          for (const s of present) {
+            if (isPriorityStudent(s)) {
+              priorityList.push(s);
+            } else {
+              regularList.push(s);
+            }
+          }
+
+          const shuffle = (arr) => {
+            const copy = [...arr];
+            for (let i = copy.length - 1; i > 0; i--) {
+              const j = Math.floor(Math.random() * (i + 1));
+              [copy[i], copy[j]] = [copy[j], copy[i]];
+            }
+            return copy;
+          };
+
+          const shuffledPriority = shuffle(priorityList);
+          const shuffledRegular = shuffle(regularList);
+
+          // Initialize K empty team slots
+          const teams = Array.from({ length: K }, () => []);
+
+          // 1. Group Ratanak, Panhareach, and Sak together into a randomly selected team
+          if (shuffledPriority.length > 0) {
+            const priorityTeamIdx = Math.floor(Math.random() * K);
+            for (const p of shuffledPriority) {
+              teams[priorityTeamIdx].push(p);
+            }
+          }
+
+          // 2. Distribute remaining students fairly into smallest teams (randomly breaking ties for leftover odd members)
+          for (const s of shuffledRegular) {
+            let minLen = Infinity;
+            for (let i = 0; i < K; i++) {
+              if (teams[i].length < minLen) minLen = teams[i].length;
+            }
+            const candidateIndices = [];
+            for (let i = 0; i < K; i++) {
+              if (teams[i].length === minLen) candidateIndices.push(i);
+            }
+            const chosenIdx = candidateIndices[Math.floor(Math.random() * candidateIndices.length)];
+            teams[chosenIdx].push(s);
+          }
+
+          this.teams = teams;
+          if (animate) {
+            this.sound.playTick(1.15);
+            this.renderTeamsGrid(true);
+          } else {
+            this.renderTeamsGrid(false);
+          }
+        }
+
+        renderTeamsGrid(animate = false) {
+          const container = this.teamsGridContainer;
+          if (!container) return;
+          container.innerHTML = '';
+
+          this.teams.forEach((members, idx) => {
+            const card = document.createElement('div');
+            card.className = 'team-card';
+            if (animate) {
+              card.style.animation = `memberDealIn 0.35s cubic-bezier(0.2, 0, 0, 1) ${idx * 0.05}s both`;
+            }
+
+            const header = document.createElement('div');
+            header.className = 'team-card-header';
+
+            const title = document.createElement('div');
+            title.className = 'team-card-title';
+            title.innerHTML = `<span class="material-symbols-outlined" style="font-size: 16px;">shield</span><span>Team ${idx + 1}</span>`;
+
+            const countBadge = document.createElement('span');
+            countBadge.className = 'team-card-count';
+            countBadge.textContent = `${members.length} members`;
+
+            header.appendChild(title);
+            header.appendChild(countBadge);
+            card.appendChild(header);
+
+            const list = document.createElement('div');
+            list.className = 'team-members-list';
+
+            if (members.length === 0) {
+              const empty = document.createElement('div');
+              empty.style.fontSize = '0.75rem';
+              empty.style.color = 'var(--md-sys-color-secondary)';
+              empty.style.padding = '0.5rem';
+              empty.style.textAlign = 'center';
+              empty.textContent = 'No members';
+              list.appendChild(empty);
+            } else {
+              members.forEach((m, mIdx) => {
+                const item = document.createElement('div');
+                item.className = 'team-member-item';
+                if (animate) {
+                  item.style.animationDelay = `${idx * 0.04 + mIdx * 0.03}s`;
+                }
+
+                const avatar = document.createElement('div');
+                avatar.className = 'team-member-avatar';
+                avatar.textContent = m.displayName.charAt(0).toUpperCase();
+
+                const nameSpan = document.createElement('span');
+                nameSpan.textContent = m.displayName;
+
+                item.appendChild(avatar);
+                item.appendChild(nameSpan);
+                list.appendChild(item);
+              });
+            }
+
+            card.appendChild(list);
+            container.appendChild(card);
+          });
+        }
+
+        matchAbsentStudent(query) {
+          const q = query.trim().toLowerCase();
+          if (!q) return null;
+
+          let bestMatch = null;
+          let bestScore = -Infinity;
+
+          for (const student of this.fullRoster) {
+            const name = student.displayName.toLowerCase();
+            const raw = student.raw.toLowerCase();
+            let score = -1;
+
+            if (name === q || raw === q) {
+              score = 1000;
+            } else if (q.includes(name)) {
+              // e.g. user types "vuthisak" and database has "Sak"
+              score = 800 - (q.length - name.length);
+            } else if (name.includes(q)) {
+              // e.g. user types "panha" and database has "Panhaboth"
+              score = 700 - (name.length - q.length);
+            } else {
+              // Word token matching
+              const tokens = name.split(/\s+/);
+              for (const t of tokens) {
+                if (q.includes(t)) {
+                  score = Math.max(score, 650 - (q.length - t.length));
+                } else if (t.includes(q)) {
+                  score = Math.max(score, 600 - (t.length - q.length));
+                }
+              }
+
+              // Levenshtein fuzzy match
+              const dist = levenshteinDistance(name, q);
+              if (dist <= 2) {
+                score = Math.max(score, 500 - dist * 50);
+              }
+            }
+
+            if (score > bestScore && score > 0) {
+              bestScore = score;
+              bestMatch = student;
+            }
+          }
+
+          return bestMatch;
+        }
+
+        markAbsent(query) {
+          const matched = this.matchAbsentStudent(query);
+          if (!matched) {
+            this.showSnackbar(`Could not match "${query}" to any student`, 'person_search');
+            return;
+          }
+
+          if (this.absentStudents.some((s) => s.raw === matched.raw)) {
+            this.showSnackbar(`"${matched.displayName}" is already marked absent`, 'info');
+            return;
+          }
+
+          this.absentStudents.push(matched);
+          this.sound.playClick();
+          this.showSnackbar(`Marked "${matched.displayName}" as absent`, 'person_off');
+          this.renderAbsentChips();
+          this.updateTeamDistributionInfo();
+          this.generateTeams(true);
+        }
+
+        removeAbsent(studentRaw) {
+          const idx = this.absentStudents.findIndex((s) => s.raw === studentRaw);
+          if (idx !== -1) {
+            const removed = this.absentStudents.splice(idx, 1)[0];
+            this.sound.playClick();
+            this.showSnackbar(`Restored "${removed.displayName}" to present`, 'person_add');
+            this.renderAbsentChips();
+            this.updateTeamDistributionInfo();
+            this.generateTeams(true);
+          }
+        }
+
+        clearAllAbsent() {
+          if (this.absentStudents.length === 0) return;
+          const count = this.absentStudents.length;
+          this.absentStudents = [];
+          this.sound.playClick();
+          this.showSnackbar(`Cleared ${count} absent student(s)`, 'check_circle');
+          this.renderAbsentChips();
+          this.updateTeamDistributionInfo();
+          this.generateTeams(true);
+        }
+
+        renderAbsentChips() {
+          const container = this.absentChipsContainer;
+          if (!container) return;
+          container.innerHTML = '';
+
+          if (this.absentStudents.length === 0) {
+            const placeholder = document.createElement('span');
+            placeholder.style.fontSize = '0.74rem';
+            placeholder.style.color = 'var(--md-sys-color-secondary)';
+            placeholder.style.opacity = '0.75';
+            placeholder.textContent = 'No students marked absent';
+            container.appendChild(placeholder);
+            return;
+          }
+
+          this.absentStudents.forEach((s) => {
+            const chip = document.createElement('div');
+            chip.className = 'absent-chip';
+
+            const name = document.createElement('span');
+            name.textContent = s.displayName;
+
+            const removeBtn = document.createElement('span');
+            removeBtn.className = 'material-symbols-outlined absent-chip-remove';
+            removeBtn.textContent = 'cancel';
+            removeBtn.title = `Restore ${s.displayName}`;
+            removeBtn.addEventListener('click', () => this.removeAbsent(s.raw));
+
+            chip.appendChild(name);
+            chip.appendChild(removeBtn);
+            container.appendChild(chip);
+          });
+        }
+
+        copyTeamsToClipboard() {
+          if (!this.teams || this.teams.length === 0) {
+            this.showSnackbar('No teams to copy', 'warning');
+            return;
+          }
+
+          const lines = [];
+          lines.push('CLASSROOM TEAMS');
+          lines.push('================');
+          this.teams.forEach((members, idx) => {
+            lines.push(`\nTEAM ${idx + 1} (${members.length} students):`);
+            if (members.length === 0) {
+              lines.push('  (empty)');
+            } else {
+              members.forEach((m) => {
+                lines.push(`  • ${m.displayName}`);
+              });
+            }
+          });
+
+          if (this.absentStudents.length > 0) {
+            lines.push('\nABSENT STUDENTS:');
+            this.absentStudents.forEach((s) => {
+              lines.push(`  • ${s.displayName}`);
+            });
+          }
+
+          const text = lines.join('\n');
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard
+              .writeText(text)
+              .then(() => {
+                this.sound.playClick();
+                this.showSnackbar('Copied team rosters to clipboard', 'content_copy');
+              })
+              .catch(() => {
+                this.fallbackCopyText(text);
+              });
+          } else {
+            this.fallbackCopyText(text);
+          }
+        }
+
+        fallbackCopyText(text) {
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+          this.sound.playClick();
+          this.showSnackbar('Copied team rosters to clipboard', 'content_copy');
+        }
+
+        setMode(mode) {
+          if (this.currentMode === mode || this.isSpinning) return;
+          if (this.currentMode === 'claw') {
+            this.exitClawAimingMode();
+          }
+          this.currentMode = mode;
+          this.sound.playClick();
+
+          const ctrl = document.getElementById('modeSegmentedControl');
+          ctrl.setAttribute('data-mode', mode);
+
+          const wheelSection = document.getElementById('wheelSection');
+          const slotSection = document.getElementById('slotSection');
+          const crateSection = document.getElementById('crateSection');
+          const clawSection = document.getElementById('clawSection');
+          const teamsSection = document.getElementById('teamsSection');
+          const mainControlPanel = document.getElementById('mainControlPanel');
+          const spinBtnText = document.getElementById('spinBtnText');
+
+          wheelSection.style.display = 'none';
+          slotSection.style.display = 'none';
+          crateSection.style.display = 'none';
+          clawSection.style.display = 'none';
+          teamsSection.style.display = 'none';
+
+          if (mode === 'wheel') {
+            mainControlPanel.style.display = 'flex';
+            wheelSection.style.display = 'flex';
+            spinBtnText.textContent = 'SPIN WHEEL';
+            this.drawWheel();
+          } else if (mode === 'slot') {
+            mainControlPanel.style.display = 'flex';
+            slotSection.style.display = 'flex';
+            spinBtnText.textContent = 'SPIN REEL';
+            this.populateSlotReel();
+          } else if (mode === 'crate') {
+            mainControlPanel.style.display = 'flex';
+            crateSection.style.display = 'flex';
+            spinBtnText.textContent = 'SHOOT CRATE';
+            this.initCrateScene();
+          } else if (mode === 'claw') {
+            mainControlPanel.style.display = 'flex';
+            clawSection.style.display = 'flex';
+            spinBtnText.textContent = 'START GRABBER';
+            this.initClawScene(false);
+          } else if (mode === 'teams') {
+            mainControlPanel.style.display = 'none';
+            teamsSection.style.display = 'flex';
+            this.updateTeamDistributionInfo();
+            this.renderTeamsGrid(false);
+          }
+        }
+
+        initListeners() {
+          const spinBtn = document.getElementById('spinBtn');
+          spinBtn.addEventListener('click', () => this.spin());
+
+          window.addEventListener('keydown', (e) => {
+            if (
+              (e.code === 'Space' || e.code === 'Enter') &&
+              !this.isSpinning &&
+              document.activeElement.tagName !== 'TEXTAREA' &&
+              document.activeElement.tagName !== 'INPUT'
+            ) {
+              e.preventDefault();
+              if (this.currentMode === 'claw') {
+                if (!this.clawAiming) {
+                  this.enterClawAimingMode();
+                } else {
+                  this.executeClawDropAndGrab();
+                }
+              } else if (this.currentMode === 'teams') {
+                this.generateTeams(true);
+              } else {
+                this.spin();
+              }
+            } else if ((e.code === 'ArrowLeft' || e.code === 'KeyA') && this.currentMode === 'claw') {
+              this.clawInputDirection = -1;
+              this.sound.playMechanicalHum();
+            } else if ((e.code === 'ArrowRight' || e.code === 'KeyD') && this.currentMode === 'claw') {
+              this.clawInputDirection = 1;
+              this.sound.playMechanicalHum();
+            }
+          });
+
+          // Team Picker Controls (Counter, Generate, and Clipboard Copy)
+          const teamDecBtn = document.getElementById('teamDecBtn');
+          const teamIncBtn = document.getElementById('teamIncBtn');
+          if (teamDecBtn) {
+            teamDecBtn.addEventListener('click', () => {
+              const cur = parseInt(this.teamCountInput.value, 10) || 4;
+              if (cur > 2) {
+                this.teamCountInput.value = cur - 1;
+                this.sound.playClick();
+                this.updateTeamDistributionInfo();
+                this.generateTeams(true);
+              }
+            });
+          }
+          if (teamIncBtn) {
+            teamIncBtn.addEventListener('click', () => {
+              const cur = parseInt(this.teamCountInput.value, 10) || 4;
+              if (cur < 15) {
+                this.teamCountInput.value = cur + 1;
+                this.sound.playClick();
+                this.updateTeamDistributionInfo();
+                this.generateTeams(true);
+              }
+            });
+          }
+          if (this.teamCountInput) {
+            this.teamCountInput.addEventListener('change', () => {
+              let val = parseInt(this.teamCountInput.value, 10);
+              if (isNaN(val) || val < 2) val = 2;
+              if (val > 15) val = 15;
+              this.teamCountInput.value = val;
+              this.sound.playClick();
+              this.updateTeamDistributionInfo();
+              this.generateTeams(true);
+            });
+          }
+          const generateTeamsBtn = document.getElementById('generateTeamsBtn');
+          if (generateTeamsBtn) {
+            generateTeamsBtn.addEventListener('click', () => {
+              this.generateTeams(true);
+            });
+          }
+          const copyTeamsBtn = document.getElementById('copyTeamsBtn');
+          if (copyTeamsBtn) {
+            copyTeamsBtn.addEventListener('click', () => {
+              this.copyTeamsToClipboard();
+            });
+          }
+
+          // Absentee Controls (Smart Fuzzy Matching for Absent Names)
+          const addAbsentBtn = document.getElementById('addAbsentBtn');
+          const handleMarkAbsent = () => {
+            const query = this.absentInput ? this.absentInput.value.trim() : '';
+            if (query) {
+              this.markAbsent(query);
+              if (this.absentInput) this.absentInput.value = '';
+            } else {
+              this.showSnackbar('Please enter a student name to mark absent', 'warning');
+            }
+          };
+          if (addAbsentBtn) {
+            addAbsentBtn.addEventListener('click', handleMarkAbsent);
+          }
+          if (this.absentInput) {
+            this.absentInput.addEventListener('keydown', (e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                handleMarkAbsent();
+              }
+            });
+          }
+          if (this.clearAbsentBtn) {
+            this.clearAbsentBtn.addEventListener('click', () => {
+              this.clearAllAbsent();
+            });
+          }
+
+          window.addEventListener('keyup', (e) => {
+            if ((e.code === 'ArrowLeft' || e.code === 'KeyA' || e.code === 'ArrowRight' || e.code === 'KeyD') && this.currentMode === 'claw') {
+              this.clawInputDirection = 0;
+            }
+          });
+
+          document.querySelectorAll('.m3-segment-btn').forEach((btn) => {
+            btn.addEventListener('click', () => this.setMode(btn.dataset.value));
+          });
+
+          // Crate shoot click
+          document.getElementById('crateStageArea').addEventListener('click', () => {
+            if (this.currentMode === 'crate' && !this.isSpinning) {
+              this.spin();
+            }
+          });
+
+          // Claw Controls (Left & Right Buttons with click & hold support)
+          const leftBtn = document.getElementById('clawLeftBtn');
+          const rightBtn = document.getElementById('clawRightBtn');
+
+          const startLeft = () => { this.clawInputDirection = -1; this.sound.playMechanicalHum(); };
+          const startRight = () => { this.clawInputDirection = 1; this.sound.playMechanicalHum(); };
+          const stopMove = () => { this.clawInputDirection = 0; };
+
+          leftBtn.addEventListener('mousedown', startLeft);
+          leftBtn.addEventListener('touchstart', startLeft);
+          leftBtn.addEventListener('mouseup', stopMove);
+          leftBtn.addEventListener('mouseleave', stopMove);
+          leftBtn.addEventListener('touchend', stopMove);
+
+          rightBtn.addEventListener('mousedown', startRight);
+          rightBtn.addEventListener('touchstart', startRight);
+          rightBtn.addEventListener('mouseup', stopMove);
+          rightBtn.addEventListener('mouseleave', stopMove);
+          rightBtn.addEventListener('touchend', stopMove);
+
+          document.getElementById('clawCenterGrabBtn').addEventListener('click', () => {
+            if (this.currentMode === 'claw' && !this.isSpinning) {
+              this.enterClawAimingMode();
+            }
+          });
+
+          document.getElementById('clawDropBtn').addEventListener('click', () => {
+            if (this.currentMode === 'claw' && this.clawAiming && !this.isSpinning) {
+              this.executeClawDropAndGrab();
+            }
+          });
+
+          document.getElementById('clawArcadeTriggerBtn').addEventListener('click', () => {
+            if (this.currentMode === 'claw' && !this.isSpinning) {
+              if (!this.clawAiming) {
+                this.enterClawAimingMode();
+              } else {
+                this.executeClawDropAndGrab();
+              }
+            }
+          });
+
+          // Bottom Theme & Sound Controls
+          document.getElementById('themeToggleBtn').addEventListener('click', () => {
+            this.sound.playClick();
+            this.toggleTheme();
+          });
+
+          const soundToggleBtn = document.getElementById('soundToggleBtn');
+          const soundIcon = document.getElementById('soundIcon');
+          soundToggleBtn.addEventListener('click', () => {
+            this.sound.muted = !this.sound.muted;
+            soundIcon.textContent = this.sound.muted ? 'volume_off' : 'volume_up';
+            if (!this.sound.muted) this.sound.playClick();
+            this.showSnackbar(this.sound.muted ? 'Sound muted' : 'Sound enabled', this.sound.muted ? 'volume_off' : 'volume_up');
+          });
+
+          document.getElementById('resetPoolBtn').addEventListener('click', () => this.resetPool());
+
+          document.getElementById('winnerCloseBtn').addEventListener('click', () => this.closeWinnerModal());
+          document.getElementById('winnerSpinAgainBtn').addEventListener('click', () => {
+            this.closeWinnerModal();
+            setTimeout(() => this.spin(), 250);
+          });
+          document.getElementById('winnerRemoveBtn').addEventListener('click', () => {
+            if (this.currentWinner) {
+              this.removeStudentFromPool(this.currentWinner, true);
+              this.closeWinnerModal();
+            }
+          });
+
+          // Roster Modal
+          const rosterScrim = document.getElementById('rosterScrim');
+          document.getElementById('openRosterBtn').addEventListener('click', () => {
+            this.sound.playClick();
+            rosterScrim.style.display = 'flex';
+            setTimeout(() => rosterScrim.classList.add('visible'), 20);
+          });
+          document.getElementById('rosterCloseBtn').addEventListener('click', () => {
+            rosterScrim.classList.remove('visible');
+            setTimeout(() => (rosterScrim.style.display = 'none'), 200);
+          });
+
+          document.getElementById('saveRosterBtn').addEventListener('click', () => {
+            const raw = document.getElementById('rosterInput').value;
+            const lines = raw
+              .split(/\r?\n/)
+              .map(s => s.trim())
+              .filter(s => s.length > 0)
+              .map(parseStudentEntry);
+
+            if (lines.length === 0) {
+              this.showSnackbar('Please enter at least one student name', 'warning');
+              return;
+            }
+
+            this.fullRoster = lines;
+            this.activePool = [...lines];
+            this.clawFixedBallRadius = null;
+            this.initClawScene(true);
+            this.updateUI();
+            this.sound.playClick();
+
+            rosterScrim.classList.remove('visible');
+            setTimeout(() => (rosterScrim.style.display = 'none'), 200);
+            this.showSnackbar(`Updated roster with ${lines.length} students`, 'check_circle');
+          });
+
+          const fileInput = document.getElementById('fileUploadInput');
+          document.getElementById('uploadFileBtn').addEventListener('click', () => fileInput.click());
+          fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (event) => {
+              document.getElementById('rosterInput').value = event.target.result;
+              this.showSnackbar(`Imported "${file.name}"`, 'upload_file');
+            };
+            reader.readAsText(file);
+          });
+
+          document.getElementById('reloadFileBtn').addEventListener('click', () => {
+            this.fetchNamesFile(true);
+          });
+
+          [rosterScrim, document.getElementById('winnerScrim')].forEach((scrim) => {
+            scrim.addEventListener('click', (e) => {
+              if (e.target === scrim) {
+                scrim.classList.remove('visible');
+                setTimeout(() => (scrim.style.display = 'none'), 200);
+              }
+            });
+          });
+        }
+      }
+
+      window.addEventListener('DOMContentLoaded', () => {
+        window.app = new App();
+      });
+    </script>
+  </body>
+</html>
